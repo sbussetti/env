@@ -56,7 +56,7 @@ if [[ $- == *i* ]]; then
       fi
     }
 
-    PS1="\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
+    PS1="\$([[ -n \$VIRTUAL_ENV ]] && echo \"\[$SOLAR_GREEN\](\$(display_virtualenv_path)) \")\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
 
 fi
 

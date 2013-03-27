@@ -1,0 +1,9 @@
+[user]
+	name = sbussetti
+	email = sbussetti@freelancersunion.org
+
+[alias]
+	co = checkout
+	stat = status
+	cm = commit
+    br = branch
