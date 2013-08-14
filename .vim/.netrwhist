@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_1='/Users/sbussetti/src/fu-web/src/fu_web/conf/default'
+let g:netrw_dirhist_2='/Users/sbussetti/src/iws-puppet/modules/app'
+let g:netrw_dirhist_3='/Users/sbussetti/src/iws-puppet/modules'
+let g:netrw_dirhist_4='/Users/sbussetti/src/fu-web/src/fu_web/conf/default'
+let g:netrw_dirhist_5='/Users/sbussetti/src/fu-web/src/fu_web/members/views'
+let g:netrw_dirhist_6='/Users/sbussetti/src/healthrepublic-web/src/healthrepublic_web/conf/newyork_coop'
+let g:netrw_dirhist_7='/Users/sbussetti/src/fu-web/src/fu_web/conf'
+let g:netrw_dirhist_8='/Users/sbussetti'
