@@ -1,4 +1,5 @@
 *.py[cod]
+.netrwhist
 
 # C extensions
 *.so
