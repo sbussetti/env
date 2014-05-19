@@ -17,10 +17,10 @@ endif
 
 if version < 600
   so <sfile>:p:h/django.vim
-  so <sfile>:p:h/html.vim
+  so <sfile>:p:h/xml.vim
 else
   runtime! syntax/django.vim
-  runtime! syntax/html.vim
+  runtime! syntax/xml.vim
   unlet b:current_syntax
 endif
 

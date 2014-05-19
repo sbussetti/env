@@ -8,8 +8,18 @@
 	cm = commit
     br = branch
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    tagrev = show-ref --tags
+    #relog = log --no-merges --pretty=oneline --abbrev-commit
+    relog = log --no-merges --pretty=format:'%h | %ad | %s%d [%an]' --abbrev-commit --date=short
+    tagref = show-ref --tags
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
 [diff]
 	tool = vimdiff
 [merge]
-	tool = vimdiff
+    #tool = vimdiff
+	tool = fugitive
+[color]
+	ui = true
+[push]
+    default = matching
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
