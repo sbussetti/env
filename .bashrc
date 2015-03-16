@@ -48,8 +48,16 @@ if [[ $- == *i* ]]; then
         [[ $(svn status 2> /dev/null) ]] && echo "*"
     }
 
-    function parse_svn_branch {
+    function parse_svn_branch() {
         svn info 2> /dev/null | grep '^URL:' | egrep -o '(tags|branches)/[^/]+|trunk' | egrep -o '[^/]+$' | sed "s/$/$(parse_svn_dirty)/"
+    }
+
+    function parse_hg_dirty() {
+        [[ $(hg status 2> /dev/null) ]] && echo "*"
+    }
+
+    function parse_hg_branch() {
+        hg branch 2> /dev/null | awk '{print $1}' | sed "s/$/$(parse_hg_dirty)/"
     }
 
     function display_virtualenv_path {
@@ -58,8 +66,24 @@ if [[ $- == *i* ]]; then
       fi
     }
 
-    PS1="\$([[ -n \$VIRTUAL_ENV ]] && echo \"\[$SOLAR_GREEN\](\$(display_virtualenv_path)) \")\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
+    PS1="\$([[ -n \$VIRTUAL_ENV ]] && echo \"\[$SOLAR_GREEN\](\$(display_virtualenv_path)) \")\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
 #"
+
+    #LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    # man colors
+    man() {
+        env \
+        LESS_TERMCAP_mb=$(printf "$BOLD") \
+        LESS_TERMCAP_md=$(printf "$SOLAR_BLUE") \
+        LESS_TERMCAP_me=$(printf "\e[0m") \
+        LESS_TERMCAP_se=$(printf "\e[0m") \
+        LESS_TERMCAP_so=$(printf "$SOLAR_CYAN") \
+        LESS_TERMCAP_ue=$(printf "\e[0m") \
+        LESS_TERMCAP_us=$(printf "$SOLAR_GREEN") \
+            man "$@"
+    }
+ 
+
 fi
 
 # known_hosts based completion
@@ -82,12 +106,10 @@ _ssh() {
     fi
 }
 
+
 complete -o bashdefault -o default -o nospace -F _ssh ssh 2>/dev/null || complete -o default -o nospace -F _ssh ssh
 complete -o bashdefault -o default -o nospace -F _ssh scp 2>/dev/null || complete -o default -o nospace -F _ssh scp
 complete -o bashdefault -o default -o nospace -F _ssh rsync 2>/dev/null || complete -o default -o nospace -F _ssh rsync
 
-. ${HOME}/.bash/git-completion.bash
-# Exports
-# Make vim the default editor
-export EDITOR="vim"
-set -o vi
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
