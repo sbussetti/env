@@ -107,6 +107,7 @@ _ssh() {
 }
 
 # EVERYONE GETS NEW HISTFILES
+[ -d ~/.history.d ] || mkdir --mode=0700 ~/.history.d
 export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`"-"`tty|cut -c6-`
 
 complete -o bashdefault -o default -o nospace -F _ssh ssh 2>/dev/null || complete -o default -o nospace -F _ssh ssh
