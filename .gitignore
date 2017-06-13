@@ -1,6 +1,5 @@
 *.py[cod]
 .netrwhist
-.DS_Store
 
 # C extensions
 *.so
@@ -12,6 +11,7 @@ dist
 build
 eggs
 parts
+bin
 var
 sdist
 develop-eggs
@@ -35,4 +35,6 @@ nosetests.xml
 .project
 .pydevproject
 
-*.sw[op]
+# cruft
+*.sw[mnop]
+.DS_Store

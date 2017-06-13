@@ -1,0 +1,51 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "strict": 2,
+    "no-undef": 2,
+    "max-len": [2, 200, 4],
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/react-in-jsx-scope": 2,
+    "react/jsx-boolean-value": 0,
+    "react/jsx-indent": [1, 2],
+    "react/jsx-indent-props": [1, 2],
+    "indent": [2, 2, {
+      "SwitchCase": 1,
+      "VariableDeclarator": {"var": 1, "let": 1, "const": 1},
+      "ObjectExpression": "first"
+    }],
+    "block-scoped-var": 0,
+    "padded-blocks": 0,
+    "comma-dangle": ["error", "only-multiline" ],
+    "no-underscore-dangle": 0,
+    "no-console": 0,
+    "no-alert": 0,
+    "no-extra-boolean-cast": 0
+  },
+  "settings": {
+      "ecmascript": 6,
+      "jsx": true
+  },
+  "globals": {
+    "__DEV__": false,
+    "__PROD__": false,
+    "__CORDOVA__": false,
+    "__CLIENT__": false,
+    "__SERVER__": false
+  }
+}

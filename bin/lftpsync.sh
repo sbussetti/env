@@ -17,18 +17,18 @@ done
 shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
-login=
-pass=
-host=
+login=clone00
+pass=O3VJQfuhJ6kct1GR
+host=erebus.feralhosting.com
 file_name=$1
-remote_dir=""
+remote_dir="private/deluge/data"
 local_dir=${2-""}
-file_id=`echo "$file_name" | md5sum  | cut -d' ' -f1`
+file_id=`echo "$file_name" | md5 -r  | cut -d' ' -f1`
 
 if [ -z "$is_file" ]; then
-  mirror_cmd="mirror -vv -c -P5 --log=/tmp/synctorrents.${file_id}.log \"$remote_dir\" \"$local_dir\""
   remote_dir="$remote_dir/$file_name"
   local_dir="$local_dir/$file_name"
+  mirror_cmd="mirror -vv -c -P5 --log=/tmp/synctorrents.${file_id}.log \"$remote_dir\" \"$local_dir\""
   echo "[$file_id] ($remote_dir) -> ($local_dir)";
 else
   mirror_cmd="mirror -r -vv -c -P5 --log=/tmp/synctorrents.${file_id}.log --include=\"$file_name\" \"$remote_dir\" \"$local_dir\"";

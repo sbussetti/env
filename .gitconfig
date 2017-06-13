@@ -1,17 +1,29 @@
 [user]
 	name = sbussetti
-	email = sbussetti@freelancersunion.org
+	email = steve.bussetti@gmail.com
 
 [alias]
+    forcepush = push --force-with-lease
 	co = checkout
 	stat = status
 	cm = commit
+    # cm = !git add -A && git commit -m
     br = branch
+    cp = cherry-pick
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    #relog = log --no-merges --pretty=oneline --abbrev-commit
     relog = log --no-merges --pretty=format:'%h | %ad | %s%d [%an]' --abbrev-commit --date=short
     tagref = show-ref --tags
     hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+    ec = config --global -e
+    cob = checkout -b
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
+    lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+    dl = "!git ll -1"
+    dlc = diff --cached HEAD^
+
 [diff]
 	tool = vimdiff
 [merge]
@@ -23,3 +35,5 @@
     default = matching
 [mergetool "fugitive"]
 	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+[core]
+	precomposeunicode = true

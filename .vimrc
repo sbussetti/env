@@ -5,6 +5,7 @@ call pathogen#helptags()
 
 set clipboard=unnamed
 
+set noshowmode
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -18,20 +19,51 @@ set autoread
 filetype plugin indent on
 syntax on
 set foldmethod=syntax
+set foldenable
 
 noremap <Space> <Nop>
 let mapleader = "\<Space>"
+
+" reload current tab
+map <C-e><C-e> :edit<CR>
 
 map <C-p><C-p> :set paste<CR>
 map <C-p><C-n> :set nopaste<CR>
 map <C-i><C-w> :set diffopt+=iwhite<CR>
 
+nnoremap <Leader>S :s/\<<C-r><C-w>\>/
+nnoremap <Leader>SA :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>s :s/<C-r><C-w>/
+nnoremap <Leader>sa :%s/<C-r><C-w>/
+
+nnoremap <leader>z :w<CR>:silent !chmod +x %:p<CR>:silent !%:p 2>&1 \| tee ~/.vim/output<CR>:split ~/.vim/output<CR>:redraw!<CR>
+
 nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
-function VerticalSplitBuffer(buffer)
+function! VerticalSplitBuffer(buffer)
     execute "vert belowright sb" a:buffer 
 endfunction
-command -nargs=1 Vbuffer call VerticalSplitBuffer(<f-args>)
+command! -nargs=1 Vbuffer call VerticalSplitBuffer(<f-args>)
+noremap <Leader>e :Explore<CR>
+
+" quickfix shortcuts
+" noremap <Leader>] :lnext<CR>
+" noremap <Leader>[ :lprevious<CR>
+
+if !exists('g:grepper')
+    let g:grepper = {}
+endif
+let g:grepper.tools =
+  \ ['ack', 'grep', 'findstr', 'rg', 'pt', 'sift', 'git']
+let g:grepper.ack = { 'grepprg':    'ack --noheading --column --nocolor',
+      \                    'grepformat': '%f:%l:%c:%m',
+      \                    'escape':     '\^$.*+?()[]{}|' }
+nnoremap <leader>g :Grepper<cr>
+let g:grepper.next_tool = '<leader>g'
+
+nmap gs  <plug>(GrepperOperator)
+xmap gs  <plug>(GrepperOperator)
+
 
 " if help or quickfix are the last open buffers, auto-quit those
 " TODO: handle case where quickfix AND help are the last 2 remaining
@@ -46,6 +78,8 @@ function! MyLastWindow()
   endif
 endfunction
 
+
+
 " just type faster, jesus
 set nopaste
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -53,8 +87,10 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " airline
 set laststatus=2
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#quickfix#enabled = 1
+let g:airline#extensions#virtualenv#enabled = 1
 let g:airline_powerline_fonts = 1
 
 " git-gutter
@@ -65,97 +101,138 @@ let g:gitgutter_signs = 1
 
 " Perl
 let perl_fold=1
+" let perl_fold_blocks=1
 let perl_extended_vars=1
-let perl_fold_blocks=1
 let perl_include_pod=1
+let perl_sync_dist=250
 
 "Puppet
 au! BufRead,BufNewFile *.pp     setfiletype puppet
 
 "JS/HTML/CSS
 au! BufRead,BufNewFile *.less     setfiletype less
-au BufNewFile,BufRead *.xml,*.htm,*.html so ~/.vim/XMLFolding.vim
-"vim-javascript-syntax au FileType javascript call JavaScriptFold()
-"strip trailing ws
-autocmd BufWritePre *.js,*.htm,*html,*.css,*.less,*.scss :%s/\s\+$//e
-let xml_use_xhtml = 1
 
-"vim-javascript
-let javaScript_fold = 1 
+"Handlebars
+" au  BufNewFile,BufRead *.php set filetype=html.handlebars syntax=mustache | runtime! bundle/vim-mustache-handlebars/ftplugin/mustache.vim bundle/vim-mustache-handlebars/ftplugin/mustache*.vim bundle/vim-mustache-handlebars/ftplugin/mustache/*.vim
+
+"javascript
 let b:javascript_fold = 1
-let javascript_enable_domhtmlcss = 1
-let g:javascript_conceal_function = "ƒ"
-let g:javascript_conceal_null = "ø"
-let g:javascript_conceal_this = "@"
-let g:javascript_conceal_return = "⇚"
-let g:javascript_conceal_undefined  = "¿"
-let g:javascript_conceal_NaN = "ℕ"
-let g:javascript_conceal_prototype  = "¶"
+" let g:javascript_conceal_function = "ƒ"
+" let g:javascript_conceal_null = "ø"
+" let g:javascript_conceal_this = "@"
+" let g:javascript_conceal_return = "⇚"
+" let g:javascript_conceal_undefined  = "¿"
+" let g:javascript_conceal_NaN = "ℕ"
+" let g:javascript_conceal_prototype  = "¶"
+" autocmd BufRead,BufNewFile *.js,*.jsx setlocal foldmethod=indent
+let g:formatters_javascript = ['eslint_javascript']
+let g:formatdef_eslint_javascript = '"eslint-format"'
+let g:formatters_javascript_jsx = ['eslint_javascript_jsx']
+let g:formatdef_eslint_javascript_jsx = '"eslint-format"'
+let g:jsx_ext_required = 0
+if !exists('g:context#commentstring#table')
+    let g:context#commentstring#table = {}
+endif
+" autocmd FileType javascript.jsx setlocal commentstring=
+let g:context#commentstring#table['javascript.jsx'] = {
+			\ 'jsxRegion'     : '{/* %s */}',
+			\}
+let g:context#commentstring#table.htmldjango = {
+			\ 'javaScript'     : '// %s',
+			\}
+au FileType javascript map <Leader>i A // eslint-disable-line<ESC>
 
-"jshint2
-autocmd Filetype javascript nnoremap <silent><F6> :JSHint<CR>
-let jshint2_read = 1
-let jshint2_save = 1
-let jshint2_close = 1
-let jshint2_error = 1
 
-"Python
-" sorry i don't like line numbers
-let g:pymode_options = 0
-setlocal complete+=t
-setlocal formatoptions-=t
-"if v:version > 702 && !&relativenumber
-"    setlocal number
-"endif
-"setlocal nowrap
-setlocal textwidth=79
-setlocal commentstring=#%s
-setlocal define=^\s*\\(def\\\\|class\\)
-"let g:pymode_lint = 0
-"let g:pymode_lint_on_fly = 0
-"let g:pymode_lint_on_write = 0
-"let g:pymode_lint_unmodified = 0
-let g:pymode_virtualenv = 1
-let g:pymode_lint = 1
-let g:pymode_lint_on_fly = 0
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_unmodified = 1
-let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pep8', 'pylint', 'mccabe'] "'pyflakes', 
-let g:pymode_lint_ignore = "I0011,E501,E128,E266,E0712,E1002,E1103,C0111,C1001,C0330,R0201,R0914,R0912,W0212,W0401,W0703,W0511,unexpected-keyword-arg,no-value-for-parameter"
-"let g:pymode_lint_cwindow = 0
-let g:pymode_lint_signs = 1
-let g:pymode_lint_todo_symbol = 'WW'
-let g:pymode_lint_comment_symbol = 'CC'
-let g:pymode_lint_visual_symbol = 'RR'
-let g:pymode_lint_error_symbol = 'EE'
-let g:pymode_lint_info_symbol = 'II'
-let g:pymode_lint_pyflakes_symbol = 'FF'
-let g:pymode_options_max_line_length = 159
+"ack.vim
+"todo, figure out the 'project root' somehow and only search that?
+noremap <Leader>a :LAck <cword><CR>
 
-let g:pymode_doc = 0
-let g:pymode_false = 1
-
-let g:pymode_rope = 0
-"let g:pymode_rope_complete_on_dot = 1
-"let g:pymode_rope_completion_bind = '<C-Space>'
-"let g:pymode_rope_autoimport = 1
-"let g:pymode_rope_rename_bind = '<C-c>rr'
-"let g:pymode_rope_goto_definition_bind = '<C-c>g'
-"let g:pymode_rope_goto_definition_cmd = 'new'
-"let g:pymode_rope_regenerate_on_write = 1
+"Python: see ftplugin/python/general.vim
 
 " jedi
-let g:jedi#popup_on_dot = 0
-autocmd FileType python setlocal completeopt-=preview
-
+let g:jedi#auto_initialization = 1
+let g:jedi#popup_on_dot = 1
+let g:jedi#auto_vim_configuration = 1
+let g:jedi#use_tabs_not_buffers = 1
+" let g:jedi#use_splits_not_buffers = 'right'
+let g:jedi#show_call_signatures = 1
+" disables docstring window during autocomplete
 "set ts=2 sw=2 et
 "let g:indent_guides_start_level=2
 
-"python aliases
-autocmd FileType python map <buffer> <F6> :PymodeLint<CR>
-autocmd FileType python map <buffer> <F5> :PymodeLintAuto<CR>
-let g:pep8_map=''
-
 "git
 noremap <Leader>gb :Gblame<CR>
+
+"syntastic
+set sessionoptions-=blank
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_ignore_files = ['\m\c\.py$', '\m\c.yml$', '\m\c.yaml$']
+let g:syntastic_mode_map = { 
+            \ 'mode': 'passive',
+            \ 'active_filetypes': ['apiblueprint', 'php', 'php.wordpress', 'javascript', 'json'] }
+let g:syntastic_javascript_checkers = ['eslint']
+
+" let g:syntastic_error_symbol = '❌'
+" let g:syntastic_style_error_symbol = '⁉️'
+" let g:syntastic_warning_symbol = '⚠️'
+" let g:syntastic_style_warning_symbol = '💩'
+
+highlight link SyntasticErrorSign SignColumn
+highlight link SyntasticWarningSign SignColumn
+highlight link SyntasticStyleErrorSign SignColumn
+highlight link SyntasticStyleWarningSign SignColumn
+
+noremap <Leader>st :SyntasticToggleMode<CR>
+noremap <Leader>se :SyntasticCheck<CR> :Errors<CR>
+" autocmd FileType php map <buffer> <F6> :Errors<CR>
+au FileType php map <Leader>i A // @codingStandardsIgnoreLine<ESC>
+
+" autocmd Filetype apiblueprint nnoremap <silent><F6> :SyntasticCheck drafter<CR>
+
+" obsession 
+set statusline+=%{ObsessionStatus()}
+set tabline+=%{ObsessionStatus()}
+set titlestring+=%{ObsessionStatus()}
+
+" logs
+au BufRead	*.log   setf    httplog
+
+" postgreSQL
+au BufNewFile,BufRead *.sql  setf pgsql
+au BufNewFile,BufRead *.sql  set syntax=pgsql
+
+" csv
+noremap <Leader>csv :%ArrangeColumn!<CR>
+" let g:csv_col='[^,]*,'
+" let g:csv_autocmd_arrange = 1
+" let g:csv_autocmd_arrange_size = 1024*1024*64
+
+" autoformat
+let g:autoformat_verbosemode=0
+
+noremap <Leader>f :Autoformat<CR>
+
+" linediff
+noremap <Leader>ld :Linediff<CR>
+noremap <Leader>lr :LinediffReset<CR>
+
+" scss
+autocmd BufRead,BufNewFile *.css,*.scss,*.less setlocal foldmethod=marker foldmarker={,}
+
+if !exists('g:vdebug_options')
+    let g:vdebug_options = {}
+endif
+let g:vdebug_options['path_maps'] = {'/home/vagrant/src': '/Users/sbussetti/src'}
+let g:vdebug_options['break_on_open'] = 0
+let g:vdebug_options['continuous_mode'] = 1
+
+" ansible
+autocmd BufRead,BufNewFile */ansible/*.yml set syntax=ansible
+
