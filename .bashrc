@@ -119,7 +119,7 @@ _ssh() {
 # EVERYONE GETS NEW HISTFILES
 [ -d ~/.history.d ] || mkdir --mode=0700 ~/.history.d
 export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`"-"`tty|cut -c6-`
-export HISTCONTROL=erasedups
+export HISTCONTROL=erasedups:ignoreboth
 export HISTSIZE=10000
 set show-all-if-ambiguous on
 shopt -s histappend
@@ -134,3 +134,8 @@ export NVM_DIR="/Users/sbussetti/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 export PATH="$HOME/.yarn/bin:$PATH"
+
+. ${HOME}/.bash/git-completion.bash
+# __git_complete gco _git_checkout
+# __git_complete g __git_main
+. ~/perl5/perlbrew/etc/bashrc
