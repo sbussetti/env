@@ -6,6 +6,8 @@ if [[ $- == *i* ]]; then
         export TERM=gnome-256color
     elif infocmp xterm-256color >/dev/null 2>&1; then
         export TERM=xterm-256color
+    elif infocmp term-256color >/dev/null 2>&1; then
+        export TERM=term-256color
     fi
 
     tput sgr 0 0
@@ -62,21 +64,28 @@ if [[ $- == *i* ]]; then
 
     function display_virtualenv_path {
       if [ -n "$VIRTUAL_ENV" ]; then
-          echo -ne "($(basename $VIRTUAL_ENV)) "
+          echo -ne "(py-$(basename $VIRTUAL_ENV)) "
       fi
     }
+    VENV="\[$SOLAR_GREEN\]\$(display_virtualenv_path)";
 
     function display_nvm_version {
         if [ -n "$NVM_BIN" ]; then
-            echo -ne "($($NVM_BIN/node --version)) "
+            echo -ne "(node-$($NVM_BIN/node --version)) "
         fi
     }
-
-    VENV="\[$SOLAR_GREEN\]\$(display_virtualenv_path)";
     NVMV="\[$SOLAR_RED\]\$(display_nvm_version)";
 
+    function display_rbenv_version {
+        RBENV_VERSION=$(rbenv version | sed 's/ (.*//')
+        if [ -n "$RBENV_VERSION" ]; then
+            echo -ne "(rb-${RBENV_VERSION}) "
+        fi
+    }
+    RBENV="\[$SOLAR_RED\]\$(display_rbenv_version)";
 
-    PS1="${VENV}${NVMV}\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
+
+    PS1="${VENV}${NVMV}${RBENV}\[${BOLD}${style_user}\]\u\[$SOLAR_BASE1\]: \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \$ \[$RESET\]"
 #"
 
     #LESS_TERMCAP_mb=$(printf "\e[1;31m") \
@@ -117,7 +126,7 @@ _ssh() {
 }
 
 # EVERYONE GETS NEW HISTFILES
-[ -d ~/.history.d ] || mkdir --mode=0700 ~/.history.d
+[ -d ~/.history.d ] || mkdir -m 0700 ~/.history.d
 export HISTFILE="${HOME}/.history.d/history-"`uname -n`"-"`id -nu`"-"`tty|cut -c6-`
 export HISTCONTROL=erasedups:ignoreboth
 export HISTSIZE=10000
@@ -128,14 +137,3 @@ complete -o bashdefault -o default -o nospace -F _ssh ssh 2>/dev/null || complet
 complete -o bashdefault -o default -o nospace -F _ssh scp 2>/dev/null || complete -o default -o nospace -F _ssh scp
 complete -o bashdefault -o default -o nospace -F _ssh rsync 2>/dev/null || complete -o default -o nospace -F _ssh rsync
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-export NVM_DIR="/Users/sbussetti/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-export PATH="$HOME/.yarn/bin:$PATH"
-
-. ${HOME}/.bash/git-completion.bash
-# __git_complete gco _git_checkout
-# __git_complete g __git_main
-. ~/perl5/perlbrew/etc/bashrc
