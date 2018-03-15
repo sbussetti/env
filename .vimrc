@@ -6,8 +6,8 @@ call pathogen#helptags()
 set clipboard=unnamed
 
 set noshowmode
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set hlsearch
 set showmatch
@@ -30,6 +30,7 @@ map <C-e><C-e> :edit<CR>
 map <C-p><C-p> :set paste<CR>
 map <C-p><C-n> :set nopaste<CR>
 map <C-i><C-w> :set diffopt+=iwhite<CR>
+set diffopt+=vertical
 
 nnoremap <Leader>S :s/\<<C-r><C-w>\>/
 nnoremap <Leader>SA :%s/\<<C-r><C-w>\>/
@@ -167,16 +168,19 @@ noremap <Leader>gb :Gblame<CR>
 set sessionoptions-=blank
 
 set statusline+=%#warningmsg#
+set statusline+=%{fugitive#statusline()}
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_ignore_files = ['\m\c\.py$', '\m\c.yml$', '\m\c.yaml$']
+let g:syntastic_ignore_files = ['\m\c\.py$'] 
 let g:syntastic_mode_map = { 
             \ 'mode': 'passive',
-            \ 'active_filetypes': ['apiblueprint', 'php', 'php.wordpress', 'javascript', 'json'] }
+            \ 'active_filetypes': [
+            \   'apiblueprint', 'php', 'php.wordpress', 'javascript', 'json', 'yaml', 'yaml.ansible'
+            \]}
 let g:syntastic_javascript_checkers = ['eslint']
 
 " let g:syntastic_error_symbol = '❌'
@@ -234,5 +238,5 @@ let g:vdebug_options['break_on_open'] = 0
 let g:vdebug_options['continuous_mode'] = 1
 
 " ansible
-autocmd BufRead,BufNewFile */ansible/*.yml set syntax=ansible
+autocmd BufRead,BufNewFile */ansible/*.yml set syntax=yaml.ansible
 
