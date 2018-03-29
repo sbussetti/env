@@ -32,12 +32,18 @@ map <C-p><C-n> :set nopaste<CR>
 map <C-i><C-w> :set diffopt+=iwhite<CR>
 set diffopt+=vertical
 
+" replacement
 nnoremap <Leader>S :s/\<<C-r><C-w>\>/
 nnoremap <Leader>SA :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>s :s/<C-r><C-w>/
 nnoremap <Leader>sa :%s/<C-r><C-w>/
 
+" what does this do again?
 nnoremap <leader>z :w<CR>:silent !chmod +x %:p<CR>:silent !%:p 2>&1 \| tee ~/.vim/output<CR>:split ~/.vim/output<CR>:redraw!<CR>
+
+" spellcheck toggle
+noremap <Leader>so :setlocal spell spelllang=en_us<CR>
+noremap <Leader>sO :setlocal nospell<CR>
 
 nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>

@@ -1,22 +1,33 @@
 [user]
   name = sbussetti
-  email = steve.bussetti@gmail.com
+  email = steve.bussetti@oracle.com
 
 [alias]
-  fp = push --force-with-lease
   co = checkout
+  cob = checkout -b
   stat = status
-  cm = commit
+  st = status
+  c = commit
+  ca = commit -a
+  cm = commit -m
   cam = commit -am
-  br = branch
+  b = branch
+  br = branch -r
+  bra = branch -ra
   cp = cherry-pick
+  f = fetch
+  pu = push
+  r = remote
+  rv = remote -v
+  pl = pull
+
   lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   relog = log --no-merges --pretty=format:'%h | %ad | %s%d [%an]' --abbrev-commit --date=short
   tagref = show-ref --tags
   hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+  taghist = log --pretty=format:'%h %ad | %s%d [%an]' --tags --no-walk --date=short
 
   ec = config --global -e
-  cob = checkout -b
   ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
   ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
   lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
