@@ -9,6 +9,7 @@
   st = status
   c = commit
   ca = commit -a
+  caa = commit -a --amend
   cm = commit -m
   cam = commit -am
   b = branch
@@ -17,6 +18,8 @@
   cp = cherry-pick
   f = fetch
   pu = push
+  puf = push -f
+  put = push --tags
   r = remote
   rv = remote -v
   pl = pull

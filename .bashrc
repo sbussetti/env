@@ -18,16 +18,19 @@ export EDITOR="vim"
 set -o vi
 VIM=$(command -v vim)
 LS=$(command -v ls)
+KUBECTL=$(command -v kubectl)
+GIT=$(command -v git)
 
 alias ll="$LS -al"
 alias vi=$VIM
 alias v=$VIM
-alias g='git'
+alias g=$GIT
+alias k=$KUBECTL
+alias kn="$KUBECTL --namespace"
+alias ka="$KUBECTL --all-namespaces=true"
 
 # GIT ALIASES
 alias g='git'
-
-
 alias gg='g co -'
 alias gm='g merge -'
 alias gs='g st'
@@ -60,6 +63,5 @@ alias gh='g hist'
 #     . /usr/local/share/bash-completion/bash_completion
 # fi
 
-
-# should always go last or at least after all aliases are defined 
-# . ~/.bash/wrap-aliases.bash
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+# export PATH="$PATH:$HOME/.rvm/bin"

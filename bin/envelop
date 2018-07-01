@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# requires coreutils (brew install coreutils)
+
+findgitroot() {
+  local path=$1;
+  while [[ $path != / ]];
+  do
+    local envname=$(basename $(git -C $path rev-parse --show-toplevel))
+    if [[ $envname == "env" ]]; then
+      echo $path;
+      break;
+    fi
+    # Note: if you want to ignore symlinks, use "$(realpath -s "$path"/..)"
+    path="$(readlink -f "$path"/..)"
+  done
+}
+
+collect() {
+  # (recursively) copy all files in $HOME that match files already in this project
+  for F in $PROJFILES; do
+    if [ -e "$HOME/$F" ] && [ $(diff "$HOME/$F" "$PROJROOT/$F") ]; then
+      cp -v "$HOME/$F" "$PROJROOT/$F";
+    fi
+  done
+}
+
+restore() {
+  for D in $PROJDIRS; do
+    [[ -d "$HOME/$D" ]] || mkdir -v $D
+  done
+
+  for F in $PROJFILES; do
+    if [ ! -e "$HOME/$F" ] || [ $(diff "$HOME/$F" "$PROJROOT/$F") ]; then
+      cp -v "$PROJROOT/$F" "$HOME/$F";
+    fi
+  done
+}
+
+SCRIPTNAME=$0
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+PROJROOT=$(findgitroot $(dirname $SCRIPTPATH));
+
+PROJDIRS=$(find $PROJROOT -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to $PROJROOT);
+PROJFILES=$(find $PROJROOT -type f \( ! -ipath "*.git/*" ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    # -e|--extension)
+    # EXTENSION="$2"
+    # shift # past argument
+    # shift # past value
+    # ;;
+    # --default)
+    # DEFAULT=YES
+    # shift # past argument
+    # ;;
+    collect)
+      collect
+      shift
+      ;;
+    restore)
+      restore
+      shift
+      ;;
+    *)    # unknown option
+      POSITIONAL+=("$1") # save it in an array for later
+      shift # past argument
+      ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters

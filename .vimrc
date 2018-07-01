@@ -185,9 +185,12 @@ let g:syntastic_ignore_files = ['\m\c\.py$']
 let g:syntastic_mode_map = { 
             \ 'mode': 'passive',
             \ 'active_filetypes': [
-            \   'apiblueprint', 'php', 'php.wordpress', 'javascript', 'json', 'yaml', 'yaml.ansible'
+            \   'apiblueprint', 'php', 'php.wordpress', 
+            \   'javascript', 'json', 'yaml', 'yaml.ansible',
+            \   'ruby'
             \]}
 let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_ruby_checkers = ['rubocop']
 
 " let g:syntastic_error_symbol = '❌'
 " let g:syntastic_style_error_symbol = '⁉️'
