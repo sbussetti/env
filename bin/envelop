@@ -19,7 +19,17 @@ findgitroot() {
 collect() {
   # (recursively) copy all files in $HOME that match files already in this project
   for F in $PROJFILES; do
-    if [ -e "$HOME/$F" ] && [ $(diff "$HOME/$F" "$PROJROOT/$F") ]; then
+    if [ -e "$HOME/$F" ] && [ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]; then
+      if [ $INTERACTIVE ]; then
+        diff "$HOME/$F" "$PROJROOT/$F"
+        read -p "Continue? (n)/[y]: " yn;
+        case $yn in
+          "" ) ;;
+          [Yy] ) ;;
+          [Nn] ) continue;;
+          * ) echo "Please answer [y]es or [n]o.";;
+        esac
+      fi 
       cp -v "$HOME/$F" "$PROJROOT/$F";
     fi
   done
@@ -30,47 +40,68 @@ restore() {
     [[ -d "$HOME/$D" ]] || mkdir -v $D
   done
 
+  local CONTINUE;
+
   for F in $PROJFILES; do
     if [ ! -e "$HOME/$F" ] || [ $(diff "$HOME/$F" "$PROJROOT/$F") ]; then
+      if [ $INTERACTIVE ]; then
+        diff "$PROJROOT/$F" "$HOME/$F" 
+        read -p "Continue? (n)/[y]: " yn;
+        case $yn in
+          "" ) ;;
+          [Yy] ) ;;
+          [Nn] ) continue;;
+          * ) echo "Please answer [y]es or [n]o.";;
+        esac
+      fi 
       cp -v "$PROJROOT/$F" "$HOME/$F";
     fi
   done
 }
 
-SCRIPTNAME=$0
+
+
+SCRIPTNAME=$(basename $0)
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 PROJROOT=$(findgitroot $(dirname $SCRIPTPATH));
-
 PROJDIRS=$(find $PROJROOT -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to $PROJROOT);
-PROJFILES=$(find $PROJROOT -type f \( ! -ipath "*.git/*" ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
+PROJFILES=$(find $PROJROOT -type f \( ! -ipath "*.git/*" ! -iname .gitignore ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
+
+
 
 POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-key="$1"
-
-case $key in
-    # -e|--extension)
-    # EXTENSION="$2"
-    # shift # past argument
-    # shift # past value
-    # ;;
-    # --default)
-    # DEFAULT=YES
-    # shift # past argument
-    # ;;
-    collect)
-      collect
-      shift
-      ;;
-    restore)
-      restore
-      shift
-      ;;
-    *)    # unknown option
-      POSITIONAL+=("$1") # save it in an array for later
-      shift # past argument
-      ;;
-esac
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+  -i|--interactive)
+  INTERACTIVE=YES
+  shift # past argument
+  ;;
+  -h|--help)
+  echo "$SCRIPTNAME [options] [action(s)]"
+  shift # past argument
+  ;;
+  # -e|--extension)
+  # EXTENSION="$2"
+  # shift # past argument
+  # shift # past value
+  # ;;
+  # --default)
+  # DEFAULT=YES
+  # shift # past argument
+  # ;;
+  collect)
+  collect
+  shift
+  ;;
+  restore)
+  restore
+  shift
+  ;;
+  *)    # unknown option
+  POSITIONAL+=("$1") # save it in an array for later
+  shift # past argument
+  ;;
+  esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
