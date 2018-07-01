@@ -21,6 +21,7 @@ collect() {
   for F in $PROJFILES; do
     if [ -e "$HOME/$F" ] && [ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]; then
       if [ $INTERACTIVE ]; then
+        echo -e "> $HOME/$F\n< $PROJROOT/$F"
         diff "$HOME/$F" "$PROJROOT/$F"
         read -p "Continue? (n)/[y]: " yn;
         case $yn in
@@ -37,14 +38,15 @@ collect() {
 
 restore() {
   for D in $PROJDIRS; do
-    [[ -d "$HOME/$D" ]] || mkdir -v $D
+    [[ -d "$HOME/$D" ]] || mkdir -v $HOME/$D
   done
 
   local CONTINUE;
 
   for F in $PROJFILES; do
-    if [ ! -e "$HOME/$F" ] || [ $(diff "$HOME/$F" "$PROJROOT/$F") ]; then
+    if [[ ! -e "$HOME/$F" ]] || [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
       if [ $INTERACTIVE ]; then
+        echo -e "> $HOME/$F\n< $PROJROOT/$F"
         diff "$PROJROOT/$F" "$HOME/$F" 
         read -p "Continue? (n)/[y]: " yn;
         case $yn in
@@ -65,7 +67,7 @@ SCRIPTNAME=$(basename $0)
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 PROJROOT=$(findgitroot $(dirname $SCRIPTPATH));
 PROJDIRS=$(find $PROJROOT -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to $PROJROOT);
-PROJFILES=$(find $PROJROOT -type f \( ! -ipath "*.git/*" ! -iname .gitignore ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
+PROJFILES=$(find $PROJROOT -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -iname .gitignore ! -iname .gitmodules ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
 
 
 

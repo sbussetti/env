@@ -1,0 +1,10 @@
+#!/bin/bash
+
+git fetch && \
+git checkout env/development && git pull && \
+git merge - -m merge && \
+git checkout env/staging && git pull && \
+git merge - -m merge && \
+git merge -s ours env/production -m merge && \
+git checkout env/production && git pull && \
+git merge --squash env/staging

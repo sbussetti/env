@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. ~/.profile
+
+nvm run 7.1.0 `which cli-clock` -b " " -f " " -c "bgRed,bgBlack" -t

@@ -1,0 +1,5 @@
+SRC=`mktemp`
+cat - >$SRC
+eslint ---no-color --fix $SRC >/dev/null # 2>/dev/null 
+cat $SRC
+rm -f $SRC
