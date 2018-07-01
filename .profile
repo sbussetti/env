@@ -54,15 +54,15 @@ export HOMEBREW_GITHUB_API_TOKEN="545dde6fb43a16e53ca13251fee2bbe3caa9b696"
 
 export PGPASSWORD=yaim0Ao3IZeez3a 
 
-. ~/.dynacle
+[[ -e ~/.dynacle ]] && . ~/.dynacle
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-eval "$(rbenv init -)"
+[[ $(which -s rbenv 2>&1 1>/dev/null) ]] && eval "$(rbenv init -)"
 
 if [[ "x$NVM_DIR" == "x" ]]; then
     export NVM_DIR="$HOME/.nvm"
-    . "/usr/local/opt/nvm/nvm.sh"
+    [[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
 fi
 
 eval "$(pyenv init -)"
@@ -75,8 +75,8 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 # export PATH="$PATH:$HOME/.rvm/bin"
 
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-. <(kubectl completion bash)
-. ~/.bash/kube-auth-completion.bash
+[[ $(which kubectl) ]] && . <(kubectl completion bash)
+[[ -e ~/.bash/kube-auth-completion.bash ]] && . ~/.bash/kube-auth-completion.bash
 
 # should always go last or at least after all aliases are defined 
 . ~/.bash/wrap-aliases.bash
