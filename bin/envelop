@@ -19,7 +19,7 @@ findgitroot() {
 collect() {
   # (recursively) copy all files in $HOME that match files already in this project
   for F in $PROJFILES; do
-    if [ -e "$HOME/$F" ] && [ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]; then
+    if [[ -e "$HOME/$F" ]] && [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
       if [ $INTERACTIVE ]; then
         echo -e "> $HOME/$F\n< $PROJROOT/$F"
         diff "$HOME/$F" "$PROJROOT/$F"

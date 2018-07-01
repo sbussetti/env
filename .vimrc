@@ -61,12 +61,16 @@ if !exists('g:grepper')
     let g:grepper = {}
 endif
 let g:grepper.tools =
-  \ ['ack', 'grep', 'findstr', 'rg', 'pt', 'sift', 'git']
+  \ ['ag', 'ack', 'grep', 'findstr', 'rg', 'pt', 'sift', 'git']
 let g:grepper.ack = { 'grepprg':    'ack --noheading --column --nocolor',
       \                    'grepformat': '%f:%l:%c:%m',
       \                    'escape':     '\^$.*+?()[]{}|' }
+let g:grepper.ag = { 'grepprg': 'ag --vimgrep --' }
 nnoremap <leader>g :Grepper<cr>
 let g:grepper.next_tool = '<leader>g'
+let g:grepper.highlight = 0
+let g:grepper.simple_prompt = 0
+let g:grepper.side = 0
 
 nmap gs  <plug>(GrepperOperator)
 xmap gs  <plug>(GrepperOperator)
@@ -121,7 +125,7 @@ au! BufRead,BufNewFile *.less     setfiletype less
 
 "Handlebars
 " au  BufNewFile,BufRead *.php set filetype=html.handlebars syntax=mustache | runtime! bundle/vim-mustache-handlebars/ftplugin/mustache.vim bundle/vim-mustache-handlebars/ftplugin/mustache*.vim bundle/vim-mustache-handlebars/ftplugin/mustache/*.vim
-
+au BufRead,BufNewFile *.region set filetype=html
 "javascript
 let b:javascript_fold = 1
 " let g:javascript_conceal_function = "ƒ"
@@ -181,14 +185,15 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_ignore_files = ['\m\c\.py$'] 
+let g:syntastic_ignore_files = ['\m\c\.py$', '\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
 let g:syntastic_mode_map = { 
             \ 'mode': 'passive',
             \ 'active_filetypes': [
-            \   'apiblueprint', 'php', 'php.wordpress', 
+            \   'apiblueprint', 'php', 'php.wordpress',
             \   'javascript', 'json', 'yaml', 'yaml.ansible',
             \   'ruby'
             \]}
+
 let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_ruby_checkers = ['rubocop']
 
