@@ -49,12 +49,8 @@ _insed(){
 }
 alias insed=_insed
 
-
-export HOMEBREW_GITHUB_API_TOKEN="545dde6fb43a16e53ca13251fee2bbe3caa9b696"
-
-export PGPASSWORD=yaim0Ao3IZeez3a 
-
 [[ -e ~/.dynacle ]] && . ~/.dynacle
+[[ -e ~/.localrc ]] && . ~/.localrc
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
