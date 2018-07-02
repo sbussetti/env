@@ -54,7 +54,7 @@ alias insed=_insed
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-[[ $(which -s rbenv 2>&1 1>/dev/null) ]] && eval "$(rbenv init -)"
+[[ -e $(which rbenv) ]] && echo "Loading rbenv..." && eval "$(rbenv init -)"
 
 if [[ "x$NVM_DIR" == "x" ]]; then
     export NVM_DIR="$HOME/.nvm"

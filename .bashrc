@@ -59,9 +59,7 @@ alias gh='g hist'
 #     fi
 # }
 
-# if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-#     . /usr/local/share/bash-completion/bash_completion
-# fi
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"
