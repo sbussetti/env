@@ -39,3 +39,6 @@ indent_size = 2
 
 [*.j2]
 indent_size = 2
+
+[Makefile]
+indent_style = Tab

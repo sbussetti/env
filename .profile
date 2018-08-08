@@ -69,13 +69,10 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 # export PATH="$PATH:$HOME/.rvm/bin"
 
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/src
-source /usr/local/bin/virtualenvwrapper.sh
-
 [[ $(which kubectl) ]] && . <(kubectl completion bash)
 [[ -e ~/.bash/kube-auth-completion.bash ]] && . ~/.bash/kube-auth-completion.bash
+
+. ~/.bash/oci-curl.bash
 
 # should always go last or at least after all aliases are defined 
 . ~/.bash/wrap-aliases.bash

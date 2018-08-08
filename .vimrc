@@ -214,10 +214,14 @@ au FileType php map <Leader>i A // @codingStandardsIgnoreLine<ESC>
 
 " autocmd Filetype apiblueprint nnoremap <silent><F6> :SyntasticCheck drafter<CR>
 
+" vim-session
+let g:session_autosave_periodic = 1
+let g:session_autosave = 1
+
 " obsession 
-set statusline+=%{ObsessionStatus()}
-set tabline+=%{ObsessionStatus()}
-set titlestring+=%{ObsessionStatus()}
+" set statusline+=%{ObsessionStatus()}
+" set tabline+=%{ObsessionStatus()}
+" set titlestring+=%{ObsessionStatus()}
 
 " logs
 au BufRead	*.log   setf    httplog
