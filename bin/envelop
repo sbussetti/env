@@ -62,6 +62,21 @@ restore() {
 }
 
 
+help() {
+  echo "
+  $SCRIPTNAME [options] [action(s)]
+
+    options
+      -i:       interactive mode
+      -h:       displays this message
+
+    actions
+      collect:  collect env
+      restore:  restore env
+  "
+}
+
+
 
 SCRIPTNAME=$(basename $0)
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
@@ -69,19 +84,30 @@ PROJROOT=$(findgitroot $(dirname $SCRIPTPATH));
 PROJDIRS=$(find $PROJROOT -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to $PROJROOT);
 PROJFILES=$(find $PROJROOT -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -iname .gitignore ! -iname .gitmodules ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
 
-
+if [[ $# -eq 0 ]]; then
+  help
+  exit 1
+fi
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
   -i|--interactive)
-  INTERACTIVE=YES
-  shift # past argument
+    INTERACTIVE=YES
+    shift # past argument
   ;;
   -h|--help)
-  echo "$SCRIPTNAME [options] [action(s)]"
-  shift # past argument
+    help;
+    shift # past argument
+  ;;
+  collect)
+    collect
+    shift
+  ;;
+  restore)
+    restore
+    shift
   ;;
   # -e|--extension)
   # EXTENSION="$2"
@@ -92,14 +118,6 @@ while [[ $# -gt 0 ]]; do
   # DEFAULT=YES
   # shift # past argument
   # ;;
-  collect)
-  collect
-  shift
-  ;;
-  restore)
-  restore
-  shift
-  ;;
   *)    # unknown option
   POSITIONAL+=("$1") # save it in an array for later
   shift # past argument
