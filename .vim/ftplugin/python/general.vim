@@ -12,6 +12,12 @@ set foldlevelstart=10
 " set foldnestmax=99
 " set foldlevel=99
 
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%>80v.\+/
+
+"highlight BadTab ctermbg=yellow ctermfg=white guibg=#592929
+"match BadTab /^ \+/
+
 " autoformat
 noremap <F3> :Autoformat<CR>:PymodeLint<CR>
 
@@ -19,8 +25,16 @@ set foldmethod=syntax
 set foldnestmax=99
 
 setlocal completeopt-=preview
-map <buffer> <F6> :PymodeLint<CR>
-map <buffer> <F8> :PymodeLintAuto<CR>
+" map <buffer> <F6> :PymodeLint<CR>
+" map <buffer> <F8> :PymodeLintAuto<CR>
+
+"-- Check code in current buffer
+nnoremap <Leader>l :PymodeLint<CR> 
+"-- Toggle code checking
+nnoremap <Leader>lt :PymodeLintToggle<CR> 
+" -- Fix PEP8 errors in current buffer automatically
+nnoremap <Leader>la :PymodeLintAuto<CR> 
+
 setlocal formatprg=autopep8\ -
 let g:pep8_map=''
 
@@ -29,9 +43,10 @@ let b:syntastic_skip_checks = 0
 let g:syntastic_check_on_open = 0
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_python_checkers = []
 
-" sorry i don't like line numbers
-let g:pymode_options = 0
+" let g:pymode_debug=1
+let g:pymode_options = 1
 let g:pymode_trim_whitespaces = 1
 setlocal complete+=t
 setlocal formatoptions-=t
@@ -42,12 +57,12 @@ let g:pymode_folding = 1
 let g:pymode_virtualenv = 1
 let g:pymode_lint = 1
 let g:pymode_lint_signs = 1
-let g:pymode_lint_on_fly = 0
+let g:pymode_lint_on_fly = 1
 let g:pymode_lint_on_write = 1
-let g:pymode_lint_unmodified = 1
+let g:pymode_lint_unmodified = 0
 let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pep8', 'pylint', 'mccabe'] "'pyflakes', 
-let g:pymode_lint_ignore = "I0011,E501,E128,E266,E0712,E1002,E1103,C0111,C1001,C0330,R0201,R0914,R0912,W0212,W0401,W0703,W503,W0511,unexpected-keyword-arg,no-value-for-parameter"
+" let g:pymode_lint_checkers = ['pep8',  'pyflakes', 'pylint', 'mccabe'] 
+let g:pymode_lint_ignore = ["I0011","E501","E128","E266","E0712","E1002","E1103","C0111","C1001","C0330","C901","R0201","R0914","R0912","W0212","W0401","W0703","W503","W0511","W606","unexpected-keyword-arg","no-value-for-parameter"]
 "let g:pymode_lint_cwindow = 0
 let g:pymode_lint_signs = 1
 let g:pymode_lint_todo_symbol = 'WW'

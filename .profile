@@ -54,12 +54,10 @@ alias insed=_insed
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-[[ -e $(which rbenv) ]] && echo "Loading rbenv..." && eval "$(rbenv init -)"
+[[ -e $(which rbenv) ]] && eval "$(rbenv init -)"
 
-if [[ "x$NVM_DIR" == "x" ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    [[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
-fi
+export NVM_DIR="$HOME/.nvm"
+[[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
 
 eval "$(pyenv init -)"
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
@@ -71,6 +69,11 @@ if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -
 # export PATH="$PATH:$HOME/.rvm/bin"
 
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/src
+source /usr/local/bin/virtualenvwrapper.sh
+
 [[ $(which kubectl) ]] && . <(kubectl completion bash)
 [[ -e ~/.bash/kube-auth-completion.bash ]] && . ~/.bash/kube-auth-completion.bash
 

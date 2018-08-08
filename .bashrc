@@ -33,9 +33,6 @@ alias ka="$KUBECTL --all-namespaces=true"
 alias g='git'
 alias gg='g co -'
 alias gm='g merge -'
-alias gs='g st'
-alias gt='g tag'
-alias gd='g diff'
 alias gh='g hist'
 
 

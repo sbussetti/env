@@ -88,7 +88,7 @@ if [[ $- == *i* ]]; then
     NVMV="\[$SOLAR_RED\]\$(display_nvm_version)";
 
     function display_rbenv_version {
-        RBENV_VERSION=$(rbenv version | sed 's/ (.*//')
+        RBENV_VERSION=$(rbenv version | sed 's/-.* (.*//')
         if [ -n "$RBENV_VERSION" ]; then
             echo -ne "(${RBENV_VERSION}) "
         fi

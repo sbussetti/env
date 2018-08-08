@@ -3,26 +3,30 @@
   email = steve.bussetti@gmail.com
 
 [alias]
-  co = checkout
-  cob = checkout -b
-  stat = status
-  st = status
-  c = commit
-  ca = commit -a
-  caa = commit -a --amend
-  cm = commit -m
-  cam = commit -am
   b = branch
   br = branch -r
   bra = branch -ra
+  c = commit
+  ca = commit -a
+  caa = commit -a --amend
+  cam = commit -am
+  cm = commit -m
+  co = checkout
+  cob = checkout -b
   cp = cherry-pick
+  d = diff
   f = fetch
-  pu = push
+  m = merge
+  pl = pull
+  p = push
+  pt = push --tags
+  pu = push -u
   puf = push -f
-  put = push --tags
   r = remote
   rv = remote -v
-  pl = pull
+  rb = rebase
+  s = status
+  st = stash
 
   lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   relog = log --no-merges --pretty=format:'%h | %ad | %s%d [%an]' --abbrev-commit --date=short
