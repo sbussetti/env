@@ -3,6 +3,7 @@
   email = steve.bussetti@gmail.com
 
 [alias]
+  a = add
   b = branch
   br = branch -r
   bra = branch -ra
