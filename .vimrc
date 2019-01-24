@@ -1,7 +1,53 @@
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
-call pathogen#infect()
-call pathogen#helptags()
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'bash-support.vim'
+Plugin 'editorconfig-vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'syntastic'
+Plugin 'tpope/vim-airline'
+Plugin 'Chiel92/vim-autoformat'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'tpope/vim-markdown'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'hashivim/vim-terraform'
+Plugin 'martinda/Jenkinsfile-vim-syntax'
+Plugin 'jamessan/vim-gnupg'
+Bundle 'lepture/vim-jinja'
+Plugin 'saltstack/salt-vim'
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+" call pathogen#infect()
+" call pathogen#helptags()
 
 set clipboard=unnamed
 
@@ -14,18 +60,24 @@ set showmatch
 set history=1000
 set undolevels=1000
 set viminfo='100,<500,s10,h
-set autoread 
+set autoread
 
-filetype plugin indent on
-syntax on
-set foldmethod=syntax
+" filetype plugin indent on
 set foldenable
+set foldmethod=marker
+
+set foldmethod=syntax
+
+syntax on
 
 noremap <Space> <Nop>
 let mapleader = "\<Space>"
 
 " reload current tab
 map <C-e><C-e> :edit<CR>
+
+" reload vimrc
+map <C-e><C-r> :so $MYVIMRC<CR>
 
 map <C-p><C-p> :set paste<CR>
 map <C-p><C-n> :set nopaste<CR>
@@ -38,6 +90,8 @@ nnoremap <Leader>SA :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>s :s/<C-r><C-w>/
 nnoremap <Leader>sa :%s/<C-r><C-w>/
 
+" 
+
 " what does this do again?
 nnoremap <leader>z :w<CR>:silent !chmod +x %:p<CR>:silent !%:p 2>&1 \| tee ~/.vim/output<CR>:split ~/.vim/output<CR>:redraw!<CR>
 
@@ -48,7 +102,7 @@ noremap <Leader>sO :setlocal nospell<CR>
 nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 function! VerticalSplitBuffer(buffer)
-    execute "vert belowright sb" a:buffer 
+    execute "vert belowright sb" a:buffer
 endfunction
 command! -nargs=1 Vbuffer call VerticalSplitBuffer(<f-args>)
 noremap <Leader>e :Explore<CR>
@@ -94,6 +148,8 @@ endfunction
 " just type faster, jesus
 set nopaste
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" write current buffer to clipboard
+noremap <Leader>cp :w !pbcopy <CR><CR>
 
 " airline
 set laststatus=2
@@ -108,7 +164,6 @@ let g:airline_powerline_fonts = 1
 let g:gitgutter_enabled = 0
 let g:gitgutter_highlight_lines = 1
 let g:gitgutter_signs = 1
-
 
 " Perl
 let perl_fold=1
@@ -185,14 +240,14 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_ignore_files = ['\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
-let g:syntastic_mode_map = { 
-            \ 'mode': 'passive',
-            \ 'active_filetypes': [
-            \   'apiblueprint', 'php', 'php.wordpress',
-            \   'javascript', 'json', 'yaml', 'yaml.ansible',
-            \   'ruby', 'python'
-            \]}
+" let g:syntastic_ignore_files = ['\m\c\.py$', '\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
+" let g:syntastic_mode_map = {
+"             \ 'mode': 'passive',
+"             \ 'active_filetypes': [
+"             \   'apiblueprint', 'php', 'php.wordpress',
+"             \   'javascript', 'json', 'yaml', 'yaml.ansible',
+"             \   'ruby'
+"             \]}
 
 let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_ruby_checkers = ['rubocop']
@@ -217,8 +272,9 @@ au FileType php map <Leader>i A // @codingStandardsIgnoreLine<ESC>
 " vim-session
 let g:session_autosave_periodic = 1
 let g:session_autosave = 1
+let g:session_autoload = 'no'
 
-" obsession 
+" obsession
 " set statusline+=%{ObsessionStatus()}
 " set tabline+=%{ObsessionStatus()}
 " set titlestring+=%{ObsessionStatus()}
@@ -258,3 +314,16 @@ let g:vdebug_options['continuous_mode'] = 1
 " ansible
 autocmd BufRead,BufNewFile */ansible/*.yml set syntax=yaml.ansible
 
+" borrow saltstack sls syntax which is just jinja+yaml
+autocmd BufNewFile,BufRead *.yaml.j2,*.yml.j2 set ft=sls
+
+" gnupg
+" Armor files
+let g:GPGPreferArmor=1
+
+
+" diff
+if &diff
+noremap <Leader>dg V:diffget<CR>
+noremap <Leader>dp V:diffput<CR>
+endif

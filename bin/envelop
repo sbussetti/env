@@ -6,9 +6,10 @@ findgitroot() {
   local path=$1;
   while [[ $path != / ]];
   do
-    local envname=$(basename $(git -C $path rev-parse --show-toplevel))
-    if [[ $envname == "env" ]]; then
-      echo $path;
+    local envname
+    envname=$(basename "$(git -C "$path" rev-parse --show-toplevel)")
+    if [[ "$envname" == "env" ]]; then
+      echo "$path";
       break;
     fi
     # Note: if you want to ignore symlinks, use "$(realpath -s "$path"/..)"
@@ -20,17 +21,17 @@ collect() {
   # (recursively) copy all files in $HOME that match files already in this project
   for F in $PROJFILES; do
     if [[ -e "$HOME/$F" ]] && [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
-      if [ $INTERACTIVE ]; then
+      if [ "$INTERACTIVE" ]; then
         echo -e "> $HOME/$F\n< $PROJROOT/$F"
-        diff "$HOME/$F" "$PROJROOT/$F"
-        read -p "Continue? (n)/[y]: " yn;
+        colordiff "$PROJROOT/$F" "$HOME/$F"
+        read -r -p "Continue? (n)/[y]: " yn;
         case $yn in
           "" ) ;;
           [Yy] ) ;;
           [Nn] ) continue;;
           * ) echo "Please answer [y]es or [n]o.";;
         esac
-      fi 
+      fi
       cp -v "$HOME/$F" "$PROJROOT/$F";
     fi
   done
@@ -38,24 +39,22 @@ collect() {
 
 restore() {
   for D in $PROJDIRS; do
-    [[ -d "$HOME/$D" ]] || mkdir -v $HOME/$D
+    [[ -d "$HOME/$D" ]] || mkdir -v "$HOME/$D"
   done
-
-  local CONTINUE;
 
   for F in $PROJFILES; do
     if [[ ! -e "$HOME/$F" ]] || [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
-      if [ $INTERACTIVE ]; then
+      if [ "$INTERACTIVE" ]; then
         echo -e "> $HOME/$F\n< $PROJROOT/$F"
-        diff "$PROJROOT/$F" "$HOME/$F" 
-        read -p "Continue? (n)/[y]: " yn;
+        colordiff "$HOME/$F" "$PROJROOT/$F"
+        read -r -p "Continue? (n)/[y]: " yn;
         case $yn in
           "" ) ;;
           [Yy] ) ;;
           [Nn] ) continue;;
           * ) echo "Please answer [y]es or [n]o.";;
         esac
-      fi 
+      fi
       cp "$HOME/$F" "$HOME/${F}.bak";
       cp -v "$PROJROOT/$F" "$HOME/$F";
     fi
@@ -79,11 +78,11 @@ help() {
 
 
 
-SCRIPTNAME=$(basename $0)
-SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-PROJROOT=$(findgitroot $(dirname $SCRIPTPATH));
-PROJDIRS=$(find $PROJROOT -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to $PROJROOT);
-PROJFILES=$(find $PROJROOT -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -iname .gitignore ! -iname .gitmodules ! -iname README* ! -iname *.sw* ! -iname $SCRIPTNAME \) | xargs realpath --relative-to $PROJROOT);
+SCRIPTNAME="$(basename "$0")"
+SCRIPTPATH="$( cd "$(dirname "$0")" || return ; pwd -P )"
+PROJROOT=$(findgitroot "$(dirname "$SCRIPTPATH")");
+PROJDIRS=$(find "$PROJROOT" -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to "$PROJROOT");
+PROJFILES=$(find "$PROJROOT" -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -iname .gitignore ! -iname .gitmodules ! -iname "README*" ! -iname .netrwhist ! -iname "*.sw*" ! -iname "$SCRIPTNAME" \) | xargs realpath --relative-to "$PROJROOT");
 
 if [[ $# -eq 0 ]]; then
   help
