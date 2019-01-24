@@ -56,6 +56,7 @@ restore() {
           * ) echo "Please answer [y]es or [n]o.";;
         esac
       fi 
+      cp "$HOME/$F" "$HOME/${F}.bak";
       cp -v "$PROJROOT/$F" "$HOME/$F";
     fi
   done
