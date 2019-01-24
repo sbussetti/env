@@ -185,13 +185,13 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_ignore_files = ['\m\c\.py$', '\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
+let g:syntastic_ignore_files = ['\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
 let g:syntastic_mode_map = { 
             \ 'mode': 'passive',
             \ 'active_filetypes': [
             \   'apiblueprint', 'php', 'php.wordpress',
             \   'javascript', 'json', 'yaml', 'yaml.ansible',
-            \   'ruby'
+            \   'ruby', 'python'
             \]}
 
 let g:syntastic_javascript_checkers = ['eslint']

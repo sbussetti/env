@@ -59,20 +59,26 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 export NVM_DIR="$HOME/.nvm"
 [[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
 
-eval "$(pyenv init -)"
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
-# pyenv virtualenvwrapper
-
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"
 
 # [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper_lazy.sh
+export PIPENV_VERBOSITY=-1
+
+# pyenv
+export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" 
+
 [[ $(which kubectl) ]] && . <(kubectl completion bash)
 [[ -e ~/.bash/kube-auth-completion.bash ]] && . ~/.bash/kube-auth-completion.bash
 
-. ~/.bash/oci-curl.bash
-
 # should always go last or at least after all aliases are defined 
 . ~/.bash/wrap-aliases.bash
+
+# vi: filetype=sh

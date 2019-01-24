@@ -64,18 +64,20 @@ if [[ $- == *i* ]]; then
     }
 
     function display_python_env {
-      PYENV_VER=$(pyenv version-name)
-      if [ -s $PYENV_VER ] || [ -s $VIRTUAL_ENV ]; then
-        echo -ne "(";
-        if [ -n "$PYENV_VER" ]; then
-            echo -ne "${PYENV_VER}"
-        else
-            echo -ne "sys"
+      if [ $(which pyenv 2>/dev/null) ]; then
+        PYENV_VER=$(pyenv version-name)
+        if [ -s $PYENV_VER ] || [ -s $VIRTUAL_ENV ]; then
+          echo -ne "(";
+          if [ -n "$PYENV_VER" ]; then
+              echo -ne "${PYENV_VER}"
+          else
+              echo -ne "sys"
+          fi
+          if [ -n "$VIRTUAL_ENV" ]; then
+              echo -ne ":$(basename $VIRTUAL_ENV)"
+          fi
+          echo -ne ") ";
         fi
-        if [ -n "$VIRTUAL_ENV" ]; then
-            echo -ne ":$(basename $VIRTUAL_ENV)"
-        fi
-        echo -ne ") ";
       fi
     }
     VENV="\[$SOLAR_GREEN\]\$(display_python_env)";
