@@ -1,6 +1,5 @@
-[user]
-  name = sbussetti
-  email = steve.bussetti@oracle.com
+[include]
+  path = .gitconfig.local
 
 [alias]
   b = branch
@@ -27,12 +26,14 @@
   r = remote
   rv = remote -v
   rb = rebase
+  rbi = rebase -i
   rbc = rebase --continue
   rpo = remote prune origin
   s = status
+  smu = submodule update
+  smurr = submodule update --recursive --remote
   st = stash
   t = tag
-  us = submodule update --recursive --remote
 
   lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   relog = log --no-merges --pretty=format:'%h | %ad | %s%d [%an]' --abbrev-commit --date=short
