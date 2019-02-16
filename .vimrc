@@ -2,8 +2,8 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " logging
-set verbosefile=~/.vim/log/verbose.log
-set verbose=15
+" set verbosefile=~/.vim/log/verbose.log
+" set verbose=15
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -16,8 +16,6 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Plugin 'bash-support.vim'
 Plugin 'editorconfig-vim'
-" Plugin 'davidhalter/jedi-vim'
-" Plugin 'syntastic'
 " Plugin 'Chiel92/vim-autoformat'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
@@ -35,6 +33,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'itchyny/lightline.vim'
 Plugin 'bling/vim-bufferline'
 Plugin 'GEverding/vim-hocon'
+Plugin 'w0rp/ale'
 
 
 " All of your Plugins must be added before the following line
@@ -263,45 +262,11 @@ let g:gitgutter_signs = 1
 "git
 noremap <Leader>gb :Gblame<CR>
 
-""syntastic
-"set sessionoptions-=blank
-
-"set statusline+=%#warningmsg#
-"set statusline+=%{fugitive#statusline()}
-"" set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"" let g:syntastic_ignore_files = ['\m\c\.py$', '\m.*/html/core/.*', '\m.*/html/content/vendor/.*']
-"" let g:syntastic_mode_map = {
-""             \ 'mode': 'passive',
-""             \ 'active_filetypes': [
-""             \   'apiblueprint', 'php', 'php.wordpress',
-""             \   'javascript', 'json', 'yaml', 'yaml.ansible',
-""             \   'ruby'
-""             \]}
-
-"let g:syntastic_javascript_checkers = ['eslint']
-"" let g:syntastic_ruby_checkers = ['rubocop']
-
-"" let g:syntastic_error_symbol = '❌'
-"" let g:syntastic_style_error_symbol = '⁉️'
-"" let g:syntastic_warning_symbol = '⚠️'
-"" let g:syntastic_style_warning_symbol = '💩'
-
-"highlight link SyntasticErrorSign SignColumn
-"highlight link SyntasticWarningSign SignColumn
-"highlight link SyntasticStyleErrorSign SignColumn
-"highlight link SyntasticStyleWarningSign SignColumn
-
-"noremap <Leader>st :SyntasticToggleMode<CR>
-"noremap <Leader>se :SyntasticCheck<CR> :Errors<CR>
-"" autocmd FileType php map <buffer> <F6> :Errors<CR>
-"au FileType php map <Leader>i A // @codingStandardsIgnoreLine<ESC>
-
-"" autocmd Filetype apiblueprint nnoremap <silent><F6> :SyntasticCheck drafter<CR>
+"ale
+let g:ale_completion_enabled = 1
+let g:ale_linters = {
+      \ 'python': ['flake8', 'mypy', 'pylint', 'pyls'],
+      \}
 
 "" vim-session
 "let g:session_autosave_periodic = 1

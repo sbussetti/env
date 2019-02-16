@@ -61,8 +61,12 @@ export JAVA_HOME
 export NVM_DIR="$HOME/.nvm"
 [[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
 
-eval "$(pyenv init -)"
-[[ ! -z $(command -v pyenv-virtualenv-init) ]] && eval "$(pyenv virtualenv-init -)" && pyenv virtualenvwrapper
+export PYENV_ROOT="$HOME/.pyenv"
+export WORKON_HOME=$HOME/.virtualenvs
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PIPENV_VERBOSITY=-1q
+if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
