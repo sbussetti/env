@@ -39,7 +39,19 @@ collect() {
 
 restore() {
   for D in $PROJDIRS; do
-    [[ -d "$HOME/$D" ]] || mkdir -v "$HOME/$D"
+    if ! [[ -d "$HOME/$D" ]]; then
+      if [ "$INTERACTIVE" ]; then
+        echo -e "Make directory $HOME/$D ?"
+        read -r -p "Continue? (n)/[y]: " yn;
+        case $yn in
+          "" ) ;;
+          [Yy] ) ;;
+          [Nn] ) continue;;
+          * ) echo "Please answer [y]es or [n]o.";;
+        esac
+      fi
+      mkdir -v "$HOME/$D"
+    fi
   done
 
   for F in $PROJFILES; do
