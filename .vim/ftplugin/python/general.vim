@@ -5,13 +5,10 @@ set textwidth=79
 set expandtab
 set autoindent
 set fileformat=unix
-
 set foldlevelstart=10
-" setlocal nowrap
-" setlocal textwidth=279
-" set foldmethod=syntax
-" set foldnestmax=99
-" set foldlevel=99
+
+let g:python_highlight_all = 1
+
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%>80v.\+/
 
