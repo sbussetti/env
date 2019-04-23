@@ -15,7 +15,9 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Plugin 'bash-support.vim'
-Plugin 'editorconfig-vim'
+" Plugin 'editorconfig-vim'
+" Plugin 'davidhalter/jedi-vim'
+" Plugin 'syntastic'
 " Plugin 'Chiel92/vim-autoformat'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
@@ -25,9 +27,9 @@ Plugin 'airblade/vim-gitgutter'
 " Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-session'
 " Plugin 'tpope/vim-unimpaired'
-" Plugin 'hashivim/vim-terraform'
-" Plugin 'martinda/Jenkinsfile-vim-syntax'
-" Plugin 'jamessan/vim-gnupg'
+Plugin 'hashivim/vim-terraform'
+Plugin 'martinda/Jenkinsfile-vim-syntax'
+Plugin 'jamessan/vim-gnupg'
 " Bundle 'lepture/vim-jinja'
 " Plugin 'saltstack/salt-vim'
 Plugin 'itchyny/lightline.vim'
@@ -51,8 +53,8 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-" call pathogen#infect()
-" call pathogen#helptags()
+
+"""""""""""""""""""""""""""""""""""""""""
 
 set clipboard=unnamed
 
@@ -103,7 +105,7 @@ let g:lightline.subseparator = {
 
 let g:lightline.tabline = {
   \   'left': [ ['tabs'] ],
-  \   'right': [ ['close'] ]
+  \   'right': [ [''] ]
   \ }
 set showtabline=2  " Show tabline
 set guioptions-=e  " Don't use GUI tabline
@@ -111,6 +113,9 @@ set guioptions-=e  " Don't use GUI tabline
 " always redraw on focus change, new buffer
 :au FocusGained * :redraw! 
 :au BufEnter * :redraw! 
+:au FileWritePost * :redraw! 
+:au FileAppendPost * :redraw! 
+:au BufWritePost * :redraw! 
 
 noremap <Space> <Nop>
 let mapleader = "\<Space>"
@@ -152,24 +157,6 @@ noremap <Leader>e :Explore<CR>
 " quickfix shortcuts
 " noremap <Leader>] :lnext<CR>
 " noremap <Leader>[ :lprevious<CR>
-
-" if !exists('g:grepper')
-"     let g:grepper = {}
-" endif
-" let g:grepper.tools =
-"   \ ['ag', 'ack', 'grep', 'findstr', 'rg', 'pt', 'sift', 'git']
-" let g:grepper.ack = { 'grepprg':    'ack --noheading --column --nocolor',
-"       \                    'grepformat': '%f:%l:%c:%m',
-"       \                    'escape':     '\^$.*+?()[]{}|' }
-" let g:grepper.ag = { 'grepprg': 'ag --vimgrep --' }
-" nnoremap <leader>g :Grepper<cr>
-" let g:grepper.next_tool = '<leader>g'
-" let g:grepper.highlight = 0
-" let g:grepper.simple_prompt = 0
-" let g:grepper.side = 0
-
-" nmap gs  <plug>(GrepperOperator)
-" xmap gs  <plug>(GrepperOperator)
 
 
 " if help or quickfix are the last open buffers, auto-quit those
@@ -248,16 +235,6 @@ let g:gitgutter_signs = 1
 
 ""Python: see ftplugin/python/general.vim
 
-"" jedi
-"let g:jedi#auto_initialization = 1
-"let g:jedi#popup_on_dot = 1
-"let g:jedi#auto_vim_configuration = 1
-"let g:jedi#use_tabs_not_buffers = 1
-"" let g:jedi#use_splits_not_buffers = 'right'
-"let g:jedi#show_call_signatures = 1
-"" disables docstring window during autocomplete
-""set ts=2 sw=2 et
-""let g:indent_guides_start_level=2
 
 "git
 noremap <Leader>gb :Gblame<CR>
@@ -267,6 +244,13 @@ let g:ale_completion_enabled = 1
 let g:ale_linters = {
       \ 'python': ['flake8', 'mypy', 'pylint', 'pyls'],
       \}
+
+""syntastic
+"set sessionoptions-=blank
+
+"set statusline+=%#warningmsg#
+"set statusline+=%{fugitive#statusline()}
+"set statusline+=%*
 
 "" vim-session
 "let g:session_autosave_periodic = 1
@@ -325,3 +309,8 @@ if &diff
 noremap <Leader>dg V:diffget<CR>
 noremap <Leader>dp V:diffput<CR>
 endif
+
+" terraform
+let g:terraform_align=1
+let g:terraform_fold_sections=1
+let g:terraform_fmt_on_save=1

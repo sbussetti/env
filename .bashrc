@@ -38,6 +38,7 @@ alias k=$KUBECTL
 alias kn="$KUBECTL --namespace"
 alias ka="$KUBECTL --all-namespaces=true"
 alias tf="terraform"
+alias sn="send-notification"
 
 # GIT ALIASES
 alias g='git'

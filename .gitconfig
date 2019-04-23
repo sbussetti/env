@@ -3,6 +3,7 @@
 
 [alias]
   b = branch
+  bd = branch -D
   br = branch -r
   bra = branch -ra
   c = commit

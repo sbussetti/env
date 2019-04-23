@@ -1,0 +1,4 @@
+#!/bin/bash
+
+message="$@"
+open -a /Applications/Noti.app --args "$message"

@@ -102,7 +102,7 @@ if [[ $- == *i* ]]; then
 
     function display_nvm_version {
       if [ -n "$NVM_BIN" ]; then
-        echo -ne "${SOLAR_RED}⬢ $("$NVM_BIN"/node --version | sed -E 's/^v//') $RESET"
+        echo -ne "${SOLAR_RED}⬢$("$NVM_BIN"/node --version | sed -E 's/^v//') $RESET"
       fi
     }
 
@@ -115,8 +115,8 @@ if [[ $- == *i* ]]; then
 
     function display_current_k8s_context {
       K8S_CTX=$(kubectl config current-context 2>&1 | sed 's/error: current-context is not set/*/')
-      if [ -n "$K8S_CTX" ] && [ "$K8S_CTX" != "*" ]; then
-        K8S_AUTHINFO=$(kubectl config get-contexts "$K8S_CTX" --no-headers=true | awk '{print $4}' )
+      K8S_AUTHINFO=$(kubectl config get-contexts "$K8S_CTX" --no-headers=true | awk '{print $4}' )
+      if [ -n "$K8S_CTX" ]; then
         echo -ne "$SOLAR_BLUE"
         if [ -n "$K8S_AUTHINFO" ]; then
           # K8S_AUTHINFO_SHORT="$(echo "$K8S_AUTHINFO" | cut -d':' -f1 | cut -c 1-15):$(echo "$K8S_AUTHINFO" | cut -d':' -f2 | cut -c 1-10)"
