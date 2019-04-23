@@ -57,8 +57,8 @@ restore() {
   for F in $PROJFILES; do
     if [[ ! -e "$HOME/$F" ]] || [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
       if [ "$INTERACTIVE" ]; then
-        echo -e "> $HOME/$F\n< $PROJROOT/$F"
-        colordiff "$HOME/$F" "$PROJROOT/$F"
+        echo -e "< $PROJROOT/$F\n> $HOME/$F"
+        colordiff "$PROJROOT/$F" "$HOME/$F"
         read -r -p "Continue? (n)/[y]: " yn;
         case $yn in
           "" ) ;;
