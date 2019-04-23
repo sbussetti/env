@@ -36,6 +36,9 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'bling/vim-bufferline'
 Plugin 'GEverding/vim-hocon'
 Plugin 'w0rp/ale'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'plytophogy/vim-virtualenv'
+Plugin 'PieterjanMontens/vim-pipenv'
 
 
 " All of your Plugins must be added before the following line
@@ -77,6 +80,9 @@ set foldmethod=syntax
 syntax on
 
 set laststatus=2
+
+set completeopt-=preview
+inoremap <expr> <Tab> pumvisible() ? '<C-n>' : '<Tab>'
 
 if !has('gui_running')
   set t_Co=256
@@ -235,7 +241,6 @@ let g:gitgutter_signs = 1
 
 ""Python: see ftplugin/python/general.vim
 
-
 "git
 noremap <Leader>gb :Gblame<CR>
 
@@ -244,6 +249,11 @@ let g:ale_completion_enabled = 1
 let g:ale_linters = {
       \ 'python': ['flake8', 'mypy', 'pylint', 'pyls'],
       \}
+let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init"
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_insert_leave = 1
+" go to definition
+noremap <Leader>d :ALEGoToDefinitionInTab<CR>
 
 ""syntastic
 "set sessionoptions-=blank

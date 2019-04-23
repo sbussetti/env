@@ -1,6 +1,9 @@
 [include]
   path = .gitconfig.local
 
+[includeIf "gitdir:~/gearbuddydev/"]
+  path = ~/gearbuddydev/.gitconfig
+
 [alias]
   b = branch
   bd = branch -D
