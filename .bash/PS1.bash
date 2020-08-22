@@ -1,11 +1,20 @@
 # vi: ft=bash
 # shellcheck disable=SC2034
 
-SHOW_PY=${SHOW_PY:-true}
-SHOW_NVM=${SHOW_NVM:-true}
-SHOW_RB=${SHOW_RB:-true}
-SHOW_TF=${SHOW_TF:-true}
-SHOW_K8S=${SHOW_K8S:-true}
+if [[ ! -z "$DEBUGPS1" ]]; then
+  echo PS1 DEBUG ON: $DEBUGPS1
+  set -x
+fi
+
+SHOW_PY=${SHOW_PY:-false}
+SHOW_NVM=${SHOW_NVM:-false}
+SHOW_RB=${SHOW_RB:-false}
+SHOW_TF=${SHOW_TF:-false}
+SHOW_K8S=${SHOW_K8S:-false}
+SHOW_SVN=${SHOW_SVN:-false}
+SHOW_HG=${SHOW_HG:-false}
+SHOW_GIT=${SHOW_GIT:-false}
+
 
 if [[ $- == *i* ]]; then
 
@@ -61,31 +70,52 @@ if [[ $- == *i* ]]; then
         style_user="$SOLAR_RED"
     fi
 
-    ## these unfortunately vary based on version
+    ########################
+    #
+    #    SOURCE CONTROL    
+    #
+    ########################
+
+    ## these strings unfortunately vary based on version of git
     GIT_CLEAN="nothing to commit, working tree clean"
 
     function parse_git_dirty() {
-        [[ $(git status 2> /dev/null | tail -n1) != "$GIT_CLEAN" ]] && echo "*"
+      [[ $(git status 2> /dev/null | tail -n1) != "$GIT_CLEAN" ]] && echo "*"
     }
 
     function parse_git_branch() {
-        git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+      git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+    }
+
+    function display_git_info() {
+      if [ "$SHOW_GIT" != true ] || ! (git branch --no-color 1>/dev/null 2>/dev/null); then return; fi
+      echo -n " on ${SOLAR_CYAN}$(parse_git_branch)${SOLAR_BASE1}"
     }
 
     function parse_svn_dirty() {
-        [[ $(svn status 2> /dev/null) ]] && echo "*"
+      [[ $(svn status 2> /dev/null) ]] && echo "*"
     }
 
     function parse_svn_branch() {
-        svn info 2> /dev/null | grep '^URL:' | grep -E -o '(tags|branches)/[^/]+|trunk' | grep -E -o '[^/]+$' | sed "s/$/$(parse_svn_dirty)/"
+      svn info 2>/dev/null | grep '^URL:' | grep -E -o '(tags|branches)/[^/]+|trunk' | grep -E -o '[^/]+$' | sed "s/$/$(parse_svn_dirty)/"
+    }
+
+    function display_svn_info() {
+      if [ "$SHOW_SVN" != true ] || ! svn info 2>&1 1>/dev/null; then return; fi
+      echo -n " on ${SOLAR_CYAN}$(parse_svn_branch)${SOLAR_BASE1}"
     }
 
     function parse_hg_dirty() {
-        [[ $(hg status 2> /dev/null) ]] && echo "*"
+      [[ $(hg status 2> /dev/null) ]] && echo "*"
     }
 
     function parse_hg_branch() {
-        hg branch 2> /dev/null | awk '{print $1}' | sed "s/$/$(parse_hg_dirty)/"
+      hg branch 2> /dev/null | awk '{print $1}' | sed "s/$/$(parse_hg_dirty)/"
+    }
+
+    function display_hg_info() {
+      if [ "$SHOW_HG" != true ] || ! hg branch 2>&1 1>/dev/null; then return; fi
+      echo -n " on ${SOLAR_CYAN}$(parse_hg_branch)${SOLAR_BASE1}"
     }
 
     # ==================================================== #
@@ -148,8 +178,8 @@ if [[ $- == *i* ]]; then
 
     function display_current_k8s_context {
       if [ "$SHOW_K8S" != true ]; then return; fi
-      K8S_CTX=$(kubectl config current-context 2>&1 | sed 's/error: current-context is not set/*/')
-      if [ -n "$K8S_CTX" ] && [ "$K8S_CTX" != "*" ]; then
+      K8S_CTX=$(kubectl config current-context 2>&1 | sed -E 's/.*error: current-context is not set.*//')
+      if [ -n "$K8S_CTX" ]; then
         echo -ne "${SOLAR_BLUE}⎈"
 
         K8S_CONTEXT_INFO="$(kubectl config get-contexts "$K8S_CTX" --no-headers=true)"
@@ -192,7 +222,7 @@ if [[ $- == *i* ]]; then
     }
     # user part
     PS_PART1="\$(display_python_env)\$(display_nvm_version)\$(display_rbenv_version)\$(display_tf_version)\$(display_current_k8s_context)\[$SOLAR_BASE1\]"
-    PS_PART2="\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]"
+    PS_PART2="\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$(display_git_info)\$(display_svn_info)\$(display_hg_info) \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]"
     PS1="$PS_PART1\$(part_sep)$PS_PART2"
 #"
 

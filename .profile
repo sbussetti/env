@@ -29,17 +29,16 @@ eval "$(direnv hook bash)"
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-# PROMPT
-# SHOW_PY=${SHOW_PY:-true}
-export SHOW_PY=false
-# SHOW_NVM=${SHOW_NVM:-true}
-export SHOW_NVM=false
-# SHOW_RB=${SHOW_RB:-true}
-export SHOW_RB=false
-# SHOW_TF=${SHOW_TF:-true}
-export SHOW_TF=false
-# SHOW_K8S=${SHOW_K8S:-true}
-export SHOW_K8S=false
+# PS1 OPTIONS
+# SHOW_PY
+# SHOW_NVM
+# SHOW_RB
+# SHOW_TF
+# SHOW_K8S
+# DEBUG_PS1=false
+SHOW_GIT=true
+# SHOW_HG
+# SHOW_SVN
 
 . "$HOME/.bash/PS1.bash"
 

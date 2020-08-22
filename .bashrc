@@ -47,7 +47,9 @@ alias kn="$KUBECTL --namespace"
 alias ka="$KUBECTL --all-namespaces=true"
 alias kcuc="$KUBECTL config use-context"
 alias ksn="$KUBECTL config set-context --current --namespace"
-alias kusn="$KUBECTL config unset contexts.$(command $KUBECTL config current-context).namespace"
+kusn() { 
+  $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
+}
 alias tf="terraform"
 alias sn="send-notification"
 alias chomp="perl -pi -e 'chomp if eof'"
