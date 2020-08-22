@@ -43,6 +43,14 @@ indent_size = 2
 [Makefile]
 indent_style = Tab
 
+[*.groovy]
+indent_style = space
+indent_size = 4
+
 [Jenkinsfile*]
+indent_style = space
+indent_size = 4
+
+[Jenkinsfile]
 indent_style = space
 indent_size = 4

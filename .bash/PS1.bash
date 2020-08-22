@@ -1,6 +1,11 @@
-#!/bin/bash 
+# vi: ft=bash
+# shellcheck disable=SC2034
 
-export LAST_FG=
+SHOW_PY=${SHOW_PY:-true}
+SHOW_NVM=${SHOW_NVM:-true}
+SHOW_RB=${SHOW_RB:-true}
+SHOW_TF=${SHOW_TF:-true}
+SHOW_K8S=${SHOW_K8S:-true}
 
 if [[ $- == *i* ]]; then
 
@@ -83,56 +88,112 @@ if [[ $- == *i* ]]; then
         hg branch 2> /dev/null | awk '{print $1}' | sed "s/$/$(parse_hg_dirty)/"
     }
 
-    function display_python_env {
-      PYENV_VER=$(pyenv version-name)
+    # ==================================================== #
+    #                                                      #
+    #   Current environment for language versions display  #
+    #                                                      #
+    # ==================================================== #
 
-      if [ -n "$PYENV_VER" ] || [ -n "$VIRTUAL_ENV" ]; then
+    function display_python_env {
+      if [ "$SHOW_PY" != true ]; then return; fi
+      PYENV_VER_FULL=$(pyenv version-name)
+      VENV_NAME="$VIRTUAL_ENV"
+      # >&2 echo "PEV: $PYENV_VER_FULL"
+      if [[ $PYENV_VER_FULL == *"/envs/"* ]]; then
+        read -r PYENV_VER VENV_NAME <<<$(echo $PYENV_VER_FULL | awk -F '/' '{print $1" "$3}')
+      else
+        PYENV_VER=$(echo $PYENV_VER_FULL | awk -F '/' '{print $1}')
+      fi
+
+      if [ -n "$PYENV_VER" ] || [ -n "$VENV_NAME" ]; then
         echo -n "${SOLAR_GREEN}🐍";
         if [ -n "$PYENV_VER" ]; then
             echo -ne "${PYENV_VER}"
         else
             echo -ne "system"
         fi
-        if [ -n "$VIRTUAL_ENV" ]; then
-            echo -ne ":$(basename "$VIRTUAL_ENV")"
+        if [ -n "$VENV_NAME" ]; then
+            echo -ne ":$(basename "$VENV_NAME")"
         fi
         echo -ne " $RESET";
       fi
     }
 
     function display_nvm_version {
+      if [ "$SHOW_NVM" != true ]; then return; fi
+
       if [ -n "$NVM_BIN" ]; then
         echo -ne "${SOLAR_RED}⬢$("$NVM_BIN"/node --version | sed -E 's/^v//') $RESET"
       fi
     }
 
     function display_rbenv_version {
-        RBENV_VERSION=$(rbenv version | sed -E 's/[ -].*\(.*$//')
-        if [ -n "$RBENV_VERSION" ]; then
-          echo -ne "${SOLAR_MAGENTA}玉$RBENV_VERSION $RESET"
-        fi
-    }
 
-    function display_current_k8s_context {
-      K8S_CTX=$(kubectl config current-context 2>&1 | sed 's/error: current-context is not set/*/')
-      if [ -n "$K8S_CTX" ] && [ "$K8S_CTX" != "*" ]; then
-        K8S_AUTHINFO=$(kubectl config get-contexts "$K8S_CTX" --no-headers=true | awk '{print $4}' )
-        echo -ne "$SOLAR_BLUE"
-        if [ -n "$K8S_AUTHINFO" ]; then
-          # K8S_AUTHINFO_SHORT="$(echo "$K8S_AUTHINFO" | cut -d':' -f1 | cut -c 1-15):$(echo "$K8S_AUTHINFO" | cut -d':' -f2 | cut -c 1-10)"
-          K8S_AUTHINFO=$(echo "$K8S_AUTHINFO" | sed 's/@.*//')
-          echo -ne "⎈ ${K8S_AUTHINFO}"
-        else
-          echo -ne "⎈ ${K8S_CTX}"
-        fi
-        echo -ne " $RESET"
-        LAST_FG=$SOLAR_BLUE
+      if [ "$SHOW_RB" != true ]; then return; fi
+
+      RBENV_VERSION=$(rbenv version | sed -E 's/[ -].*\(.*$//')
+      if [ -n "$RBENV_VERSION" ]; then
+        echo -ne "${SOLAR_MAGENTA}玉$RBENV_VERSION $RESET"
       fi
     }
 
-    # user part
+    function display_tf_version {
+      if [ "$SHOW_TF" != true ]; then return; fi
 
-    PS1="\$(display_python_env)\$(display_nvm_version)\$(display_rbenv_version)\$(display_current_k8s_context)\[$SOLAR_BASE1\]\n\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]"
+      TF_VERSION=$(terraform --version | head -1 | sed -E 's/(^Terraform v|\-.*$)//g')
+      if [ -n "$TF_VERSION" ]; then
+        echo -ne "${SOLAR_VIOLET}ᛅᚫ$TF_VERSION $RESET"
+      fi
+    }
+
+    function display_current_k8s_context {
+      if [ "$SHOW_K8S" != true ]; then return; fi
+      K8S_CTX=$(kubectl config current-context 2>&1 | sed 's/error: current-context is not set/*/')
+      if [ -n "$K8S_CTX" ] && [ "$K8S_CTX" != "*" ]; then
+        echo -ne "${SOLAR_BLUE}⎈"
+
+        K8S_CONTEXT_INFO="$(kubectl config get-contexts "$K8S_CTX" --no-headers=true)"
+        if [ -n "$K8S_CONTEXT_INFO" ]; then
+          # K8S_AUTHINFO_SHORT="$(echo "$K8S_CONTEXT_INFO" | cut -d':' -f1 | cut -c 1-15):$(echo "$K8S_CONTEXT_INFO" | cut -d':' -f2 | cut -c 1-10)"
+          read -r K8S_NAME K8S_CLUSTER K8S_AUTHINFO K8S_NAMESPACE <<<$(awk '{print $2" "$3" "$4" "$5}' <(echo "$K8S_CONTEXT_INFO"))
+
+          if [[ $K8S_AUTHINFO == *"@"* ]]; then # most likely old EKE
+            echo -ne " ${K8S_AUTHINFO/@*}"
+          else
+            echo -ne " ${K8S_CTX}"
+            # echo -ne " ${K8S_AUTHINFO}@${K8S_CLUSTER}"
+          fi
+
+          if [ -n "$K8S_NAMESPACE" ]; then
+            echo -ne "::${K8S_NAMESPACE}"
+          fi
+
+        else
+          echo -ne " ${K8S_CTX}"
+        fi
+
+        if [ "$KUSE_SHELL" == "on" ]; then
+          echo -ne "*"
+        fi
+
+        echo -ne " $RESET"
+      fi
+    }
+
+    # ==================================================== #
+
+    function width() {
+      stty size | awk '{print $2}'
+    }
+    function part_sep() {
+      if [ "$SHOW_PY" = true ] || [ "$SHOW_NVM" = true ] || [ "$SHOW_RB" = true ] || [ "$SHOW_TF" = true ] || [ "$SHOW_K8S" = true ]; then
+        printf "\n​"  # load bearing zero-width space to trip next line
+      fi
+    }
+    # user part
+    PS_PART1="\$(display_python_env)\$(display_nvm_version)\$(display_rbenv_version)\$(display_tf_version)\$(display_current_k8s_context)\[$SOLAR_BASE1\]"
+    PS_PART2="\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_git_branch)\[$SOLAR_BASE1\]\$([[ -n \$(svn info 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_svn_branch)\[$SOLAR_BASE1\]\$([[ -n \$(hg branch 2> /dev/null) ]] && echo \" on \")\[$SOLAR_CYAN\]\$(parse_hg_branch)\[$SOLAR_BASE1\] \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]"
+    PS1="$PS_PART1\$(part_sep)$PS_PART2"
 #"
 
     #LESS_TERMCAP_mb=$(printf "\e[1;31m") \

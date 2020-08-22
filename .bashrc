@@ -1,12 +1,20 @@
 #!/bin/bash
+
+# shellcheck disable=SC2123,SC2046,SC2139,SC2142,SC2086
+
 # EVERYONE GETS NEW HISTFILES
 [ -d ~/.history.d ] || mkdir -m 0700 ~/.history.d
-HISTFILE="${HOME}/.history.d/history-"$(uname -n)"-"$(id -nu)"-"$(tty|cut -c6-)
+HISTFILE="${HOME}/.history.d/history-$(uname -n)-$(id -nu)-$(tty|cut -c6-)"
 export HISTFILE
 export HISTCONTROL=erasedups:ignoreboth
 export HISTSIZE=10000
+export HISTTIMEFORMAT="%F %T: "
 set show-all-if-ambiguous on
 shopt -s histappend
+
+# color
+export CLICOLOR=true
+# LSCOLOR=""
 
 # https://superuser.com/questions/544989/does-tmux-sort-the-path-variable/583502#583502
 if [ -f /etc/profile ]; then
@@ -37,14 +45,55 @@ alias g=$GIT
 alias k=$KUBECTL
 alias kn="$KUBECTL --namespace"
 alias ka="$KUBECTL --all-namespaces=true"
+alias kcuc="$KUBECTL config use-context"
+alias ksn="$KUBECTL config set-context --current --namespace"
+alias kusn="$KUBECTL config unset contexts.$(command $KUBECTL config current-context).namespace"
 alias tf="terraform"
 alias sn="send-notification"
+alias chomp="perl -pi -e 'chomp if eof'"
+alias kill-vpn="pgrep -i '(cisco|vpnagent)' | sudo xargs kill -9"
 
 # GIT ALIASES
 alias g='git'
 alias gg='g co -'
-alias gm='g merge -'
 alias gh='g hist'
 alias gdlb='git branch -r | awk '"'"'{print $1}'"'"' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '"'"'{print $1}'"'"' | xargs git branch -d'
 
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+export PATH=/Users/sbussetti/obin:$PATH
+
+[[ -e "${HOME}/lib/oracle-cli/lib/python3.7/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "${HOME}/lib/oracle-cli/lib/python3.7/site-packages/oci_cli/bin/oci_autocomplete.sh"
+
+. ~/.bash/urlencode.bash
+
+function gnb() {
+    gnb_REMOTE=$1;
+    gnb_BRANCH=$2;
+    if [[ "x$2" == "x" ]]; then gnb_REMOTE=origin; gnb_BRANCH=$1; fi
+    g co -b "$gnb_BRANCH" && g pu -u "$gnb_REMOTE" "$gnb_BRANCH"
+}
+
+function gdt() {
+    gdt_LOCAL='';
+    gdt_REMOTE='';
+    for tag in "$@"; do
+        gdt_LOCAL="$gdt_LOCAL $tag";
+        gdt_REMOTE="$gdt_REMOTE :${tag}";
+    done
+
+    if [[ "x$gdt_LOCAL" != "x" ]]; then
+        g pu origin "$gdt_REMOTE" && git tag --delete "$gdt_LOCAL"
+    fi
+}
+
+function gdb() {
+    gdb_LOCAL='';
+    gdb_REMOTE='';
+    for branch in "$@"; do
+        gdb_LOCAL="$gdb_LOCAL $branch";
+        gdb_REMOTE="$gdb_REMOTE :${branch}";
+    done
+
+    if [[ "x$gdb_LOCAL" != "x" ]]; then
+        g pu origin "$gdb_REMOTE" && git branch -D "$gdb_LOCAL"
+    fi
+}

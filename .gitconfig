@@ -1,10 +1,8 @@
 [include]
   path = .gitconfig.local
 
-[includeIf "gitdir:~/gearbuddydev/"]
-  path = ~/gearbuddydev/.gitconfig
-
 [alias]
+  a = add
   b = branch
   bd = branch -D
   br = branch -r
@@ -21,6 +19,8 @@
   f = fetch
   ft = fetch --tags
   m = merge
+  mc = merge --continue
+  mm = merge -
   pl = pull
   p = push
   pt = push --tags
@@ -34,6 +34,8 @@
   rbc = rebase --continue
   rpo = remote prune origin
   s = status
+  sha = rev-parse --short HEAD
+  sha-long = rev-parse HEAD
   smu = submodule update
   smurr = submodule update --recursive --remote
   st = stash
@@ -73,3 +75,5 @@
   precomposeunicode = true
 [url "git@github.corp.dyndns.com:"]
 	insteadOf = https://github.corp.dyndns.com/
+[pull]
+	ff = only

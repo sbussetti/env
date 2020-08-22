@@ -14,31 +14,42 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+" syntax
+Plugin 'hashivim/vim-terraform'
+Plugin 'martinda/Jenkinsfile-vim-syntax'
+" Bundle 'lepture/vim-jinja'
+Plugin 'saltstack/salt-vim'
+Plugin 'GEverding/vim-hocon'
+Plugin 'satabin/hocon-vim'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'stephpy/vim-yaml'
+Plugin 'w0rp/ale'
+
+
+Plugin 'plytophogy/vim-virtualenv'
+Plugin 'PieterjanMontens/vim-pipenv'
+Plugin 'lambdalisue/vim-pyenv'
+Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
+
+Plugin 'jamessan/vim-gnupg'
+Plugin 'itchyny/lightline.vim'
+Plugin 'bling/vim-bufferline'
 " Plugin 'bash-support.vim'
-" Plugin 'editorconfig-vim'
+Plugin 'editorconfig-vim'
 " Plugin 'davidhalter/jedi-vim'
 " Plugin 'syntastic'
 " Plugin 'Chiel92/vim-autoformat'
+Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-rhubarb'
+Plugin 'tommcdo/vim-fubitive'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
-" Plugin 'suan/vim-instant-markdown'
 " Plugin 'tpope/vim-markdown'
 " Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-session'
-" Plugin 'tpope/vim-unimpaired'
-Plugin 'hashivim/vim-terraform'
-Plugin 'martinda/Jenkinsfile-vim-syntax'
-Plugin 'jamessan/vim-gnupg'
-" Bundle 'lepture/vim-jinja'
-" Plugin 'saltstack/salt-vim'
-Plugin 'itchyny/lightline.vim'
-Plugin 'bling/vim-bufferline'
-Plugin 'GEverding/vim-hocon'
-Plugin 'w0rp/ale'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'plytophogy/vim-virtualenv'
-Plugin 'PieterjanMontens/vim-pipenv'
+Plugin 'tpope/vim-unimpaired'
 
 
 " All of your Plugins must be added before the following line
@@ -60,7 +71,11 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""
 
 set clipboard=unnamed
-
+set number
+set cursorline
+highlight LineNr ctermfg=244 ctermbg=233
+highlight CursorLineNr ctermbg=100 ctermfg=233 cterm=bold
+highlight CursorLine cterm=none ctermbg=none ctermfg=none
 set noshowmode
 set tabstop=2
 set shiftwidth=2
@@ -106,7 +121,7 @@ let g:lightline.separator = {
 	\   'left': '', 'right': ''
   \}
 let g:lightline.subseparator = {
-	\   'left': '', 'right': '' 
+	\   'left': '', 'right': ''
   \}
 
 let g:lightline.tabline = {
@@ -117,11 +132,11 @@ set showtabline=2  " Show tabline
 set guioptions-=e  " Don't use GUI tabline
 
 " always redraw on focus change, new buffer
-:au FocusGained * :redraw! 
-:au BufEnter * :redraw! 
-:au FileWritePost * :redraw! 
-:au FileAppendPost * :redraw! 
-:au BufWritePost * :redraw! 
+:au FocusGained * :redraw!
+:au BufEnter * :redraw!
+:au FileWritePost * :redraw!
+:au FileAppendPost * :redraw!
+:au BufWritePost * :redraw!
 
 noremap <Space> <Nop>
 let mapleader = "\<Space>"
@@ -143,14 +158,16 @@ nnoremap <Leader>SA :%s/\<<C-r><C-w>\>/
 nnoremap <Leader>s :s/<C-r><C-w>/
 nnoremap <Leader>sa :%s/<C-r><C-w>/
 
-" 
+" edit path under cursor in a new tab
+noremap <Leader>a <C-w>gf<CR>
+
+"
 
 " what does this do again?
 nnoremap <leader>z :w<CR>:silent !chmod +x %:p<CR>:silent !%:p 2>&1 \| tee ~/.vim/output<CR>:split ~/.vim/output<CR>:redraw!<CR>
 
 " spellcheck toggle
-noremap <Leader>so :setlocal spell spelllang=en_us<CR>
-noremap <Leader>sO :setlocal nospell<CR>
+noremap <Leader>sp :setlocal invspell spelllang=en_us<CR>
 
 nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
@@ -190,6 +207,16 @@ noremap <Leader>cp :w !pbcopy <CR><CR>
 let g:gitgutter_enabled = 0
 let g:gitgutter_highlight_lines = 1
 let g:gitgutter_signs = 1
+
+" fugitive (git)
+" noremap <Leader>gb :Gblame<CR>
+noremap <Leader>gb :Git blame<CR>
+noremap <Leader>gv :Gbrowse<CR>
+
+" rhubarb (fugititive extension for github)
+let g:github_enterprise_urls = ['https://github.corp.dyndns.com']
+" fubitive (same but for bitbucket)
+let g:fugitive_bitbucket_domains = ['https://bitbucket.oci.oraclecorp.com']
 
 "" Perl
 "let perl_fold=1
@@ -241,15 +268,13 @@ let g:gitgutter_signs = 1
 
 ""Python: see ftplugin/python/general.vim
 
-"git
-noremap <Leader>gb :Gblame<CR>
-
 "ale
 let g:ale_completion_enabled = 1
 let g:ale_linters = {
       \ 'python': ['flake8', 'mypy', 'pylint', 'pyls'],
       \}
-let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init"
+let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init --disable=superfluous-parens"
+let g:ale_terraform_tflint_options = "--module"
 let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_insert_leave = 1
 " go to definition
@@ -259,7 +284,7 @@ noremap <Leader>d :ALEGoToDefinitionInTab<CR>
 "set sessionoptions-=blank
 
 "set statusline+=%#warningmsg#
-"set statusline+=%{fugitive#statusline()}
+set statusline+=%{FugitiveStatusline()}
 "set statusline+=%*
 
 "" vim-session
@@ -284,6 +309,7 @@ noremap <Leader>d :ALEGoToDefinitionInTab<CR>
 "" let g:csv_col='[^,]*,'
 "" let g:csv_autocmd_arrange = 1
 "" let g:csv_autocmd_arrange_size = 1024*1024*64
+autocmd BufRead,BufNewFile *.csv set syntax=text.plain filetype=text.plain
 
 "" autoformat
 "let g:autoformat_verbosemode=0
@@ -304,11 +330,62 @@ noremap <Leader>d :ALEGoToDefinitionInTab<CR>
 "let g:vdebug_options['break_on_open'] = 0
 "let g:vdebug_options['continuous_mode'] = 1
 
-"" ansible
-"autocmd BufRead,BufNewFile */ansible/*.yml set syntax=yaml.ansible
+"" ansible / yaml
 
+let s:comment = '\v^\s*#' " # comment
+let s:array_entry = '\v^\s*-\s' " - foo
+let s:named_module_entry = '\v^\s*-\s*(name|hosts|role):\s*\S' " - name: 'do stuff'
+let s:dictionary_entry = '\v^\s*[^:-]+:\s*$' " with_items:
+let s:key_value = '\v^\s*[^:-]+:\s*\S' " apt: name=package
+let s:scalar_value = '\v:\s*[>|\|]\s*$' " shell: >
+function! GetAnsibleIndent(lnum)
+  if a:lnum == 2 || !prevnonblank(a:lnum-1)
+    return 0
+  endif
+  if exists("g:ansible_unindent_after_newline")
+    if (a:lnum -1) != prevnonblank(a:lnum - 1)
+      return 0
+    endif
+  endif
+
+  let prevlnum = prevnonblank(a:lnum - 1)
+  let maintain = indent(prevlnum)
+  let increase = maintain + &sw
+
+  let line = getline(prevlnum)
+  if line =~ s:array_entry
+    if line =~ s:named_module_entry
+      return increase
+    else
+      return maintain
+    endif
+  elseif line =~ s:dictionary_entry
+    return increase
+  elseif line =~ s:key_value
+    if line =~ s:scalar_value
+      return increase
+    else
+      return maintain
+    endif
+  else
+    return maintain
+  endif
+  return maintain
+endfunction
+
+autocmd BufRead,BufNewFile */ansible/*.yml,*/roles/*.yml set syntax=yaml.ansible
+autocmd FileType yaml.ansible setl indentexpr=GetAnsibleIndent(v:lnum) ts=2 sts=2 sw=2 expandtab
+
+let g:ansible_unindent_after_newline = 1
+let g:ansible_yamlKeyName = 'yamlKey'
+
+autocmd BufNewFile,BufRead *.py.j2 set ft=python
 "" borrow saltstack sls syntax which is just jinja+yaml
-"autocmd BufNewFile,BufRead *.yaml.j2,*.yml.j2 set ft=sls
+autocmd BufNewFile,BufRead *.yaml.j2,*.yml.j2 set ft=sls
+let g:cur_filetype = &filetype
+if g:cur_filetype == "yaml.j2" || g:cur_filetype == "yml.j2"
+  set ft=sls
+endif
 
 " gnupg
 " Armor files
@@ -324,3 +401,6 @@ endif
 let g:terraform_align=1
 let g:terraform_fold_sections=1
 let g:terraform_fmt_on_save=1
+
+" instant-markdown
+let g:instant_markdown_autoscroll = 1
