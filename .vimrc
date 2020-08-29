@@ -55,8 +55,6 @@ Plugin 'tpope/vim-unimpaired'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-" filetype plugin on
 "
 " Brief help
 " :PluginList       - lists configured plugins
@@ -91,8 +89,11 @@ set smartindent
 
 set foldenable
 set foldmethod=marker
-set foldmethod=syntax
-syntax on
+au FileType sh let g:sh_fold_enabled=5
+au FileType sh let g:is_bash=1
+au FileType sh set foldmethod=syntax
+
+syntax enable
 
 set laststatus=2
 

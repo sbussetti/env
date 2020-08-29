@@ -30,17 +30,18 @@ eval "$(direnv hook bash)"
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
 # PS1 OPTIONS
-# SHOW_PY
+export SHOW_PY=true
 # SHOW_NVM
 # SHOW_RB
 # SHOW_TF
-# SHOW_K8S
+export SHOW_K8S=true
 # DEBUG_PS1=false
-SHOW_GIT=true
+export SHOW_GIT=true
 # SHOW_HG
 # SHOW_SVN
 
 . "$HOME/.bash/PS1.bash"
+# export PS1="\u@\h \W \\$ "
 
 [[ -e ~/.localrc ]] && . ~/.localrc
 
