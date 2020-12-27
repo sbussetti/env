@@ -40,17 +40,13 @@ indent_size = 2
 [*.j2]
 indent_size = 2
 
-[Makefile]
+[{Makefile,BundlerMakefile}]
 indent_style = Tab
 
 [*.groovy]
 indent_style = space
 indent_size = 4
 
-[Jenkinsfile*]
-indent_style = space
-indent_size = 4
-
-[Jenkinsfile]
+[{Jenkinsfile,*Jenkinsfile,Jenkinsfile*}]
 indent_style = space
 indent_size = 4

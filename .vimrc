@@ -14,7 +14,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" syntax
+" syntaxs
 Plugin 'hashivim/vim-terraform'
 Plugin 'martinda/Jenkinsfile-vim-syntax'
 " Bundle 'lepture/vim-jinja'
@@ -24,6 +24,7 @@ Plugin 'satabin/hocon-vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'stephpy/vim-yaml'
+Plugin 'Konfekt/FastFold'
 Plugin 'w0rp/ale'
 
 
@@ -88,10 +89,30 @@ set autoindent
 set smartindent
 
 set foldenable
-set foldmethod=marker
+set foldmethod=syntax
 au FileType sh let g:sh_fold_enabled=5
 au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax
+
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 1
+let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+
+let g:markdown_folding = 1
+let g:tex_fold_enabled = 1
+let g:vimsyn_folding = 'af'
+let g:xml_syntax_folding = 1
+let g:javaScript_fold = 1
+let g:sh_fold_enabled= 7
+let g:ruby_fold = 1
+let g:perl_fold = 1
+let g:perl_fold_blocks = 1
+let g:r_syntax_folding = 1
+let g:rust_fold = 1
+let g:php_folding = 1
+let g:java_folding = 1
+let g:groovy_folding = 1
 
 syntax enable
 

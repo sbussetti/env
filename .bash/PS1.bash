@@ -165,7 +165,7 @@ function display_current_k8s_context {
       echo -ne "*"
     fi
 
-    echo -ne " $RESET"
+    echo -ne "$RESET "
   fi
 }
 
@@ -206,19 +206,13 @@ function parse_git_dirty() {
 
 function display_git_info() {
   if [ "$SHOW_GIT" == true ] && (git branch --no-color 1>/dev/null 2>/dev/null); then
-    printf " on ${SOLAR_CYAN}%s${SOLAR_BASE1}" "$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/")"
+    printf "${SOLAR_CYAN}⅏ ${SOLAR_BASE1} on ${SOLAR_CYAN}%s${SOLAR_BASE1}" "$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/")"
   fi
 }
 
 # ==================================================== #
 
-function part_sep() {
-  if [ "$SHOW_PY" = true ] || [ "$SHOW_NVM" = true ] || [ "$SHOW_RB" = true ] || [ "$SHOW_TF" = true ] || [ "$SHOW_K8S" = true ]; then
-    printf "\n\r"  # load bearing full crlf
-  fi
-}
-
-PS1='\[$START_UNDERLINE\]$(display_python_env)\[$START_UNDERLINE\]$(display_nvm_version)\[$START_UNDERLINE\]$(display_rbenv_version)\[$START_UNDERLINE\]$(display_tf_version)\[$START_UNDERLINE\]$(display_current_k8s_context)\[$END_UNDERLINE\]\n\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\]$(display_git_info)$(display_hg_info)$(display_svn_info) \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]'
+PS1='\[$START_UNDERLINE\]$(display_python_env)\[$START_UNDERLINE\]$(display_nvm_version)\[$START_UNDERLINE\]$(display_rbenv_version)\[$START_UNDERLINE\]$(display_tf_version)\[$START_UNDERLINE\]$(display_current_k8s_context)\[$END_UNDERLINE\]$(display_git_info)$(display_hg_info)$(display_svn_info)\n\[$style_user\]\u\[$SOLAR_BASE1\]@\[$style_host\]\h\[$SOLAR_BASE1\] \[$SOLAR_GREEN\]\W\[$SOLAR_BASE1\] \[$SOLAR_VIOLET\]\$\[$SOLAR_BASE1\] \[$RESET\]'
 
 #LESS_TERMCAP_mb=$(printf "\e[1;31m") \
 # man colors

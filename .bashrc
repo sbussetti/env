@@ -43,17 +43,19 @@ alias vi=$VIM
 alias v=$VIM
 alias g=$GIT
 alias k=$KUBECTL
-alias kn="$KUBECTL --namespace"
 alias ka="$KUBECTL --all-namespaces=true"
+alias kn="$KUBECTL --namespace"
+alias kd="$KUBECTL describe"
 alias kcuc="$KUBECTL config use-context"
 alias ksn="$KUBECTL config set-context --current --namespace"
-kusn() { 
+kusn() {
   $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
 }
 alias tf="terraform"
 alias sn="send-notification"
 alias chomp="perl -pi -e 'chomp if eof'"
 alias kill-vpn="pgrep -i '(cisco|vpnagent)' | sudo xargs kill -9"
+1>/dev/null 2>&1 which colordiff && alias diff="colordiff"
 
 # GIT ALIASES
 alias g='git'
@@ -62,6 +64,8 @@ alias gh='g hist'
 alias gdlb='git branch -r | awk '"'"'{print $1}'"'"' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '"'"'{print $1}'"'"' | xargs git branch -d'
 
 export PATH=/Users/sbussetti/obin:$PATH
+
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 [[ -e "${HOME}/lib/oracle-cli/lib/python3.7/site-packages/oci_cli/bin/oci_autocomplete.sh" ]] && source "${HOME}/lib/oracle-cli/lib/python3.7/site-packages/oci_cli/bin/oci_autocomplete.sh"
 
