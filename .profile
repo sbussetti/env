@@ -6,8 +6,10 @@
 export GOPATH=$HOME/src/go
 export PATH=$HOME/src/go/bin/:$PATH
 
-JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-export JAVA_HOME
+if which /usr/libexec/java_home >/dev/null 2>&1; then
+  JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+  export JAVA_HOME
+fi
 
 [[ -e $(command -v rbenv) ]] && eval "$(rbenv init -)"
 
@@ -21,11 +23,15 @@ export NVM_DIR="$HOME/.nvm"
 export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include"
 
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-eval "$(pyenv init -)"
-# [[ ! -z $(command -v pyenv-virtualenv-init) ]] && eval "$(pyenv virtualenv-init -)" && pyenv virtualenvwrapper_lazy
+if which pyenv >/dev/null 2>&1; then
+  export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+  eval "$(pyenv init -)"
+  # [[ ! -z $(command -v pyenv-virtualenv-init) ]] && eval "$(pyenv virtualenv-init -)" && pyenv virtualenvwrapper_lazy
+fi
 
-eval "$(direnv hook bash)"
+if which direnv >/dev/null 2>&1; then
+  eval "$(direnv hook bash)"
+fi
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 

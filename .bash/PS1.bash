@@ -84,7 +84,7 @@ fi
 # ==================================================== #
 
 function display_python_env {
-  if [ "$SHOW_PY" != true ]; then return; fi
+  if ! which pyenv >/dev/null 2>&1 || [ "$SHOW_PY" != true ]; then return; fi
   PYENV_VER_FULL=$(pyenv version-name)
   VENV_NAME="$VIRTUAL_ENV"
   # >&2 echo "PEV: $PYENV_VER_FULL"
@@ -136,7 +136,7 @@ function display_tf_version {
 }
 
 function display_current_k8s_context {
-  if [ "$SHOW_K8S" != true ]; then return; fi
+  if ! which kubectl >/dev/null 2>&1 || [ "$SHOW_K8S" != true ]; then return; fi
   K8S_CTX=$(kubectl config current-context 2>&1 | sed -E 's/.*error: current-context is not set.*//')
   if [ -n "$K8S_CTX" ]; then
     echo -ne "${SOLAR_BLUE}⎈"

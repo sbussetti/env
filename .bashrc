@@ -32,16 +32,10 @@ export EDITOR="vim"
 set -o vi
 VIM=$(basename $(command -v vim))
 LS=$(basename $(command -v ls))
-KUBECTL=$(basename $(command -v kubectl))
 GIT=$(basename $(command -v git))
 
-alias stop-synergy="launchctl unload /Library/LaunchAgents/com.symless.synergy.synergy-service.plist"
-alias start-synergy="launchctl load /Library/LaunchAgents/com.symless.synergy.synergy-service.plist"
-
-alias ll="$LS -al"
-alias vi=$VIM
-alias v=$VIM
-alias g=$GIT
+if which kubectl >/dev/null 2&>1 ; then
+KUBECTL=$(basename $(command -v kubectl))
 alias k=$KUBECTL
 alias ka="$KUBECTL --all-namespaces=true"
 alias kn="$KUBECTL --namespace"
@@ -51,6 +45,15 @@ alias ksn="$KUBECTL config set-context --current --namespace"
 kusn() {
   $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
 }
+fi
+
+alias stop-synergy="launchctl unload /Library/LaunchAgents/com.symless.synergy.synergy-service.plist"
+alias start-synergy="launchctl load /Library/LaunchAgents/com.symless.synergy.synergy-service.plist"
+
+alias ll="$LS -al"
+alias vi=$VIM
+alias v=$VIM
+alias g=$GIT
 alias tf="terraform"
 alias sn="send-notification"
 alias chomp="perl -pi -e 'chomp if eof'"
