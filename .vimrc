@@ -1,83 +1,12 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" logging
-" set verbosefile=~/.vim/log/verbose.log
-" set verbose=15
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" syntaxs
-Plugin 'hashivim/vim-terraform'
-Plugin 'martinda/Jenkinsfile-vim-syntax'
-" Bundle 'lepture/vim-jinja'
-Plugin 'saltstack/salt-vim'
-Plugin 'GEverding/vim-hocon'
-Plugin 'satabin/hocon-vim'
-Plugin 'sheerun/vim-polyglot'
-Plugin 'pearofducks/ansible-vim'
-Plugin 'stephpy/vim-yaml'
-Plugin 'Konfekt/FastFold'
-Plugin 'w0rp/ale'
-
-
-Plugin 'plytophogy/vim-virtualenv'
-Plugin 'PieterjanMontens/vim-pipenv'
-Plugin 'lambdalisue/vim-pyenv'
-Plugin 'suan/vim-instant-markdown', {'rtp': 'after'}
-
-Plugin 'jamessan/vim-gnupg'
-Plugin 'itchyny/lightline.vim'
-Plugin 'bling/vim-bufferline'
-" Plugin 'bash-support.vim'
-Plugin 'editorconfig-vim'
-" Plugin 'davidhalter/jedi-vim'
-" Plugin 'syntastic'
-" Plugin 'Chiel92/vim-autoformat'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-rhubarb'
-Plugin 'tommcdo/vim-fubitive'
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-" Plugin 'tpope/vim-markdown'
-" Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-session'
-Plugin 'tpope/vim-unimpaired'
-
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-
-"""""""""""""""""""""""""""""""""""""""""
-
 set clipboard=unnamed
 set number
 set cursorline
-highlight LineNr ctermfg=244 ctermbg=233
-highlight CursorLineNr ctermbg=100 ctermfg=233 cterm=bold
-highlight CursorLine cterm=none ctermbg=none ctermfg=none
 set noshowmode
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set expandtab
 set hlsearch
 set showmatch
@@ -90,14 +19,77 @@ set smartindent
 
 set foldenable
 set foldmethod=syntax
+
+" logging
+" set verbosefile=~/.vim/log/verbose.log
+" set verbose=15
+
+"""""""""""""""""""""""""""""""""""""""""
+"          Plugins (vim-plug)
+"""""""""""""""""""""""""""""""""""""""""
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+" syntaxs
+Plug 'editorconfig/editorconfig-vim'
+Plug 'sheerun/vim-polyglot'
+
+" Plug 'hashivim/vim-terraform'
+" Plug 'martinda/Jenkinsfile-vim-syntax'
+" Plug 'saltstack/salt-vim'
+" Plug 'GEverding/vim-hocon'
+" Plug 'satabin/hocon-vim'
+" Plug 'pearofducks/ansible-vim'
+" Plug 'stephpy/vim-yaml
+
+" envs
+Plug 'plytophogy/vim-virtualenv'
+Plug 'PieterjanMontens/vim-pipenv'
+Plug 'lambdalisue/vim-pyenv'
+
+" utility
+Plug 'dense-analysis/ale'
+Plug 'suan/vim-instant-markdown', {'rtp': 'after'}
+Plug 'Konfekt/FastFold'
+Plug 'jamessan/vim-gnupg'
+" Plug 'Chiel92/vim-autoformat'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-rhubarb'
+" Plug 'tommcdo/vim-fubitive'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+" Plug 'tpope/vim-markdown'
+" Plug 'xolox/vim-misc'
+" Plug 'xolox/vim-session'
+Plug 'tpope/vim-unimpaired'
+
+" appearance
+Plug 'itchyny/lightline.vim'
+Plug 'bling/vim-bufferline'
+
+" Initialize plugin system
+call plug#end()
+"""""""""""""""""""""""""""""""""""""""""
+
 au FileType sh let g:sh_fold_enabled=5
 au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax
+highlight LineNr ctermfg=244 ctermbg=233
+highlight CursorLineNr ctermbg=100 ctermfg=233 cterm=bold
+highlight CursorLine cterm=none ctermbg=none ctermfg=none
 
 nmap zuz <Plug>(FastFoldUpdate)
 let g:fastfold_savehook = 1
 let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
 let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+let g:EditorConfig_core_mode = 'external_command'
+let g:EditorConfig_exec_path = '/usr/local/bin/editorconfig'
+let g:EditorConfig_max_line_indicator = "line"
 
 let g:markdown_folding = 1
 let g:tex_fold_enabled = 1
