@@ -1,25 +1,6 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-set clipboard=unnamed
-set number
-set cursorline
-set noshowmode
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set hlsearch
-set showmatch
-set history=1000
-set undolevels=1000
-set viminfo='100,<500,s10,h
-set autoread
-set autoindent
-set smartindent
-
-set foldenable
-set foldmethod=syntax
-
 " logging
 " set verbosefile=~/.vim/log/verbose.log
 " set verbose=15
@@ -38,7 +19,6 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " syntaxs
-Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
 
 " Plug 'hashivim/vim-terraform'
@@ -79,6 +59,27 @@ Plug 'bling/vim-bufferline'
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""
 
+
+set clipboard=unnamed
+set number
+set cursorline
+set noshowmode
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set hlsearch
+set showmatch
+set history=1000
+set undolevels=1000
+set viminfo='100,<500,s10,h
+set autoread
+set autoindent
+set smartindent
+
+set foldenable
+set foldmethod=syntax
+
+
 au FileType sh let g:sh_fold_enabled=5
 au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax
@@ -92,9 +93,9 @@ let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
 let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+let g:EditorConfig_max_line_indicator = "exceeding"
 let g:EditorConfig_core_mode = 'external_command'
 let g:EditorConfig_exec_path = '/usr/local/bin/editorconfig'
-let g:EditorConfig_max_line_indicator = "line"
 
 let g:markdown_folding = 1
 let g:tex_fold_enabled = 1
@@ -289,8 +290,9 @@ let g:fugitive_bitbucket_domains = ['https://bitbucket.oci.oraclecorp.com']
 
 "ale
 let g:ale_completion_enabled = 1
+" , 'pyls'
 let g:ale_linters = {
-      \ 'python': ['flake8', 'mypy', 'pylint', 'pyls'],
+      \ 'python': ['flake8', 'mypy', 'pylint'],
       \}
 let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init --disable=superfluous-parens"
 let g:ale_terraform_tflint_options = "--module"
