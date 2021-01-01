@@ -34,17 +34,17 @@ VIM=$(basename $(command -v vim))
 LS=$(basename $(command -v ls))
 GIT=$(basename $(command -v git))
 
-if which kubectl >/dev/null 2&>1 ; then
-KUBECTL=$(basename $(command -v kubectl))
-alias k=$KUBECTL
-alias ka="$KUBECTL --all-namespaces=true"
-alias kn="$KUBECTL --namespace"
-alias kd="$KUBECTL describe"
-alias kcuc="$KUBECTL config use-context"
-alias ksn="$KUBECTL config set-context --current --namespace"
-kusn() {
-  $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
-}
+if [[ -e $(command -v kubectl) ]]; then
+    KUBECTL=$(basename $(command -v kubectl))
+    alias k=$KUBECTL
+    alias ka="$KUBECTL --all-namespaces=true"
+    alias kn="$KUBECTL --namespace"
+    alias kd="$KUBECTL describe"
+    alias kcuc="$KUBECTL config use-context"
+    alias ksn="$KUBECTL config set-context --current --namespace"
+    kusn() {
+      $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
+    }
 fi
 
 alias stop-synergy="launchctl unload /Library/LaunchAgents/com.symless.synergy.synergy-service.plist"
