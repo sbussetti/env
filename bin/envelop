@@ -93,8 +93,8 @@ help() {
 SCRIPTNAME="$(basename "$0")"
 SCRIPTPATH="$( cd "$(dirname "$0")" || return ; pwd -P )"
 PROJROOT=$(findgitroot "$(dirname "$SCRIPTPATH")");
-PROJDIRS=$(find "$PROJROOT" -type d \( ! -ipath "*.git*" ! -iname "env" \) | xargs realpath --relative-to "$PROJROOT");
-PROJFILES=$(find "$PROJROOT" -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -iname .gitignore ! -iname .gitmodules ! -iname "README*" ! -iname .netrwhist ! -iname "*.sw*" ! -iname "$SCRIPTNAME" \) | xargs realpath --relative-to "$PROJROOT");
+PROJDIRS=$(find "$PROJROOT" -type d \( ! -ipath "*.git*" ! -ipath "*opt*" ! -iname "env" \) | xargs realpath --relative-to "$PROJROOT");
+PROJFILES=$(find "$PROJROOT" -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! -ipath "*opt*" ! -iname .gitignore ! -iname .gitmodules ! -iname "README*" ! -iname .netrwhist ! -iname "*.sw*" ! -iname "$SCRIPTNAME" \) | xargs realpath --relative-to "$PROJROOT");
 
 if [[ $# -eq 0 ]]; then
   help
