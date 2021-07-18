@@ -73,7 +73,5 @@
   default = matching
 [core]
   precomposeunicode = true
-[url "git@github.corp.dyndns.com:"]
-	insteadOf = https://github.corp.dyndns.com/
 [pull]
-	ff = only
+  ff = only

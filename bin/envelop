@@ -1,6 +1,17 @@
 #!/bin/bash
 
-# requires coreutils (brew install coreutils)
+# on OSX this requires coreutils (brew install coreutils)
+
+# COLOR
+RESET="\033[0m"     # Reset
+BLACK="\033[30m"    # Black 
+RED="\033[31m"      # Red 
+GREEN="\033[32m"    # Green
+YELLOW="\033[33m"   # Yellow
+BLUE="\033[34m"     # Blue
+MAGENTA="\033[35m"  # Magenta
+CYAN="\033[36m"     # Cyan
+WHITE="\033[37m"    # White
 
 findgitroot() {
   local path=$1;
@@ -22,7 +33,7 @@ collect() {
   for F in $PROJFILES; do
     if [[ -e "$HOME/$F" ]] && [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
       if [ "$INTERACTIVE" ]; then
-        echo -e "> $HOME/$F\n< $PROJROOT/$F"
+        printf "${GREEN}> %s/%s${RESET}\n${RED}< %s/%s${RESET}\n" "$HOME" "$F" "$PROJROOT" "$F"
         colordiff "$PROJROOT/$F" "$HOME/$F"
         read -r -p "Continue? (n)/[y]: " yn;
         case $yn in
@@ -57,7 +68,7 @@ restore() {
   for F in $PROJFILES; do
     if [[ ! -e "$HOME/$F" ]] || [[ $(diff -q "$HOME/$F" "$PROJROOT/$F") ]]; then
       if [ "$INTERACTIVE" ]; then
-        echo -e "< $PROJROOT/$F\n> $HOME/$F"
+        printf "${GREEN}> %s/%s${RESET}\n${RED}< %s/%s${RESET}\n" "$PROJROOT" "$F" "$HOME" "$F"
         colordiff "$PROJROOT/$F" "$HOME/$F"
         read -r -p "Continue? (n)/[y]: " yn;
         case $yn in
@@ -99,6 +110,11 @@ PROJFILES=$(find "$PROJROOT" -type f \( ! -iname .DS_Store ! -ipath "*.git/*" ! 
 if [[ $# -eq 0 ]]; then
   help
   exit 1
+fi
+
+if ! colordiff --help 2>&1 1>/dev/null; then
+    echo "Please install the 'colordiff' binary."
+    exit 2;
 fi
 
 POSITIONAL=()
