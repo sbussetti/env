@@ -33,9 +33,10 @@
   rbi = rebase -i
   rbc = rebase --continue
   rpo = remote prune origin
+  rs = reset  
   s = status
-  sha = rev-parse --short HEAD
-  sha-long = rev-parse HEAD
+  rphs = rev-parse --short HEAD
+  rph = rev-parse HEAD
   smu = submodule update
   smurr = submodule update --recursive --remote
   st = stash

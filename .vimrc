@@ -1,7 +1,7 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" logging
+" debug logging
 " set verbosefile=~/.vim/log/verbose.log
 " set verbose=15
 
@@ -19,15 +19,15 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " syntaxs
-Plug 'sheerun/vim-polyglot'
-
-" Plug 'hashivim/vim-terraform'
+Plug 'hashivim/vim-terraform'
+Plug 'pearofducks/ansible-vim'
+Plug 'yorokobi/vim-splunk'
 " Plug 'martinda/Jenkinsfile-vim-syntax'
 " Plug 'saltstack/salt-vim'
-" Plug 'GEverding/vim-hocon'
-" Plug 'satabin/hocon-vim'
-" Plug 'pearofducks/ansible-vim'
+Plug 'satabin/hocon-vim'
 " Plug 'stephpy/vim-yaml
+let g:polyglot_disabled = ['ftdetect']
+Plug 'sheerun/vim-polyglot'
 
 " envs
 Plug 'plytophogy/vim-virtualenv'
@@ -36,20 +36,25 @@ Plug 'lambdalisue/vim-pyenv'
 
 " utility
 Plug 'dense-analysis/ale'
-Plug 'suan/vim-instant-markdown', {'rtp': 'after'}
+Plug 'davidhalter/jedi-vim'
+Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'Konfekt/FastFold'
 Plug 'jamessan/vim-gnupg'
 " Plug 'Chiel92/vim-autoformat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
+" --- github for fugitive
 " Plug 'tpope/vim-rhubarb'
-" Plug 'tommcdo/vim-fubitive'
+" --- bitbucket for fugitive
 Plug 'tpope/vim-fugitive'
+Plug 'tommcdo/vim-fubitive'
 Plug 'airblade/vim-gitgutter'
 " Plug 'tpope/vim-markdown'
 " Plug 'xolox/vim-misc'
 " Plug 'xolox/vim-session'
 Plug 'tpope/vim-unimpaired'
+Plug 'tmhedberg/SimpylFold'
+Plug 'Konfekt/FastFold'
 
 " appearance
 Plug 'itchyny/lightline.vim'
@@ -92,11 +97,6 @@ let g:fastfold_savehook = 1
 let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
 let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
-let g:EditorConfig_max_line_indicator = "exceeding"
-let g:EditorConfig_core_mode = 'external_command'
-let g:EditorConfig_exec_path = '/usr/local/bin/editorconfig'
-
 let g:markdown_folding = 1
 let g:tex_fold_enabled = 1
 let g:vimsyn_folding = 'af'
@@ -111,6 +111,12 @@ let g:rust_fold = 1
 let g:php_folding = 1
 let g:java_folding = 1
 let g:groovy_folding = 1
+let g:python_folding = 1
+
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+let g:EditorConfig_max_line_indicator = "exceeding"
+let g:EditorConfig_core_mode = 'external_command'
+let g:EditorConfig_exec_path = '/usr/local/bin/editorconfig'
 
 syntax enable
 
@@ -231,12 +237,12 @@ let g:gitgutter_signs = 1
 " fugitive (git)
 " noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gb :Git blame<CR>
-noremap <Leader>gv :Gbrowse<CR>
+noremap <Leader>gr :GBrowse<CR>
 
 " rhubarb (fugititive extension for github)
-let g:github_enterprise_urls = ['https://github.corp.dyndns.com']
+" let g:github_enterprise_urls = ['https://github.corp.dyndns.com']
 " fubitive (same but for bitbucket)
-let g:fugitive_bitbucket_domains = ['https://bitbucket.oci.oraclecorp.com']
+let g:fubitive_domain_pattern = 'bitbucket\.oci\.oraclecorp\.com'
 
 "" Perl
 "let perl_fold=1
@@ -286,7 +292,8 @@ let g:fugitive_bitbucket_domains = ['https://bitbucket.oci.oraclecorp.com']
 ""todo, figure out the 'project root' somehow and only search that?
 "noremap <Leader>a :LAck <cword><CR>
 
-""Python: see ftplugin/python/general.vim
+""Python: 
+autocmd FileType python autocmd BufWritePre <buffer> %s/\s\+$//e
 
 "ale
 let g:ale_completion_enabled = 1
@@ -294,9 +301,9 @@ let g:ale_completion_enabled = 1
 let g:ale_linters = {
       \ 'python': ['flake8', 'mypy', 'pylint'],
       \}
-let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init --disable=superfluous-parens"
-let g:ale_terraform_tflint_options = "--module"
-let g:ale_lint_on_text_changed = 0
+let g:ale_python_pylint_options = "--disable=C0111 --disable=too-few-public-methods --disable=no-self-use --disable=unused-argument --disable=no-init --disable=superfluous-parens --disable=broad-except"
+" let g:ale_terraform_tflint_options = ""
+let g:ale_lint_on_text_changed = 1
 let g:ale_lint_on_insert_leave = 1
 " go to definition
 noremap <Leader>d :ALEGoToDefinitionInTab<CR>

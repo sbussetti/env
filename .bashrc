@@ -42,6 +42,7 @@ if [[ -e $(command -v kubectl) ]]; then
     alias kd="$KUBECTL describe"
     alias kcuc="$KUBECTL config use-context"
     alias ksn="$KUBECTL config set-context --current --namespace"
+    alias kunset="$KUBECTL config unset current-context"
     kusn() {
       $KUBECTL config unset contexts.$($KUBECTL config current-context).namespace ;
     }
@@ -60,11 +61,15 @@ alias chomp="perl -pi -e 'chomp if eof'"
 alias kill-vpn="pgrep -i '(cisco|vpnagent)' | sudo xargs kill -9"
 1>/dev/null 2>&1 which colordiff && alias diff="colordiff"
 
+alias drit="docker run -it"
+
 # GIT ALIASES
 alias g='git'
 alias gg='g co -'
 alias gh='g hist'
 alias gdlb='git branch -r | awk '"'"'{print $1}'"'"' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '"'"'{print $1}'"'"' | xargs git branch -d'
+alias gdmrb='git branch -r --merged | grep -v master | sed '"'"'s/origin\///'"'"' | xargs -n 1 git push --delete origin'
+
 
 export PATH=/Users/sbussetti/obin:$PATH
 

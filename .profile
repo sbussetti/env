@@ -1,20 +1,6 @@
 #!/bin/bash
 
 # shellcheck source=/Users/sbussetti/.bashrc
-. "$HOME/.bashrc"
-
-export GOPATH=$HOME/src/go
-export PATH=$HOME/src/go/bin/:$PATH
-
-if [[ -f "/usr/libexec/java_home" ]]; then
-  JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-  export JAVA_HOME
-fi
-
-[[ -e $(command -v rbenv) ]] && eval "$(rbenv init -)"
-
-export NVM_DIR="$HOME/.nvm"
-[[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
 
 # echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> ~/.bash_profile
 # export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
@@ -23,24 +9,38 @@ export NVM_DIR="$HOME/.nvm"
 export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/readline/lib"
 export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/readline/include"
 
-if [[ -e $(command -v pyenv) ]]; then
-  export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-  eval "$(pyenv init -)"
-  # [[ ! -z $(command -v pyenv-virtualenv-init) ]] && eval "$(pyenv virtualenv-init -)" && pyenv virtualenvwrapper_lazy
+
+. "$HOME/.bashrc"
+
+export GOPATH=$HOME/src/go
+export PATH=$HOME/src/go/bin/:$PATH
+
+if [[ -f "/usr/libexec/java_home" ]]; then
+  JAVA_HOME=$(/usr/libexec/java_home -v 1.8.0)
+  export JAVA_HOME
 fi
 
-if [[ -e $(command -v direnv) ]]; then
-  eval "$(direnv hook bash)"
-fi
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+[[ -e $(command -v pyenv) ]] && eval "$(pyenv init --path)"
+[[ -e $(command -v pyenv) ]] && eval "$(pyenv init -)"
 
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+[[ -e $(command -v rbenv) ]] && eval "$(rbenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[[ -e "/usr/local/opt/nvm/nvm.sh" ]] && . "/usr/local/opt/nvm/nvm.sh"
+
+[[ -e $(command -v direnv) ]] && eval "$(direnv hook bash)"
+
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 # PS1 OPTIONS
 export SHOW_PY=true
 # SHOW_NVM
-# SHOW_RB
+export SHOW_RB=true
 # SHOW_TF
-export SHOW_K8S=true
+export SHOW_K8S=false
 # DEBUG_PS1=false
 export SHOW_GIT=true
 # SHOW_HG
