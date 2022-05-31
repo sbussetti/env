@@ -15,6 +15,19 @@ SHOW_SVN=${SHOW_SVN:-false}
 SHOW_HG=${SHOW_HG:-false}
 SHOW_GIT=${SHOW_GIT:-false}
 
+if ! command -v rbenv >/dev/null; then
+    if [ "$SHOW_RB" = true ]; then
+        echo "rbenv is not installed, setting SHOW_RB=false"
+    fi
+    SHOW_RB=false
+fi
+if ! command -v python >/dev/null; then
+    if [ "$SHOW_PY" = true ]; then
+        echo "python is not installed, setting SHOW_PY=false"
+    fi
+    SHOW_PY=false
+fi
+
 
 if [[ $- != *i* ]]; then
   return;

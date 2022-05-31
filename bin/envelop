@@ -117,6 +117,16 @@ if ! colordiff --help 2>&1 1>/dev/null; then
     exit 2;
 fi
 
+# Commands also provided by macOS and the commands dir, dircolors, vdir have been installed with the prefix "g".
+# If you need to use these commands with their normal names, you can add a "gnubin" directory to your PATH with:
+#   PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+if ! which realpath; then
+    if ! brew list | grep coreutils; then
+        echo "Please install 'coreutils'."
+        exit 2;
+    fi
+fi
+
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
   key="$1"
